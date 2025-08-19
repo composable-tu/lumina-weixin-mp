@@ -83,11 +83,12 @@
                               value="{{selectedVoteOptionsCache}}">
                 <t-checkbox icon="rectangle"
                             label="{{item.optionName+((item.voteCount&&utils.isVoteResultShow(selectedTask.status,selectedTask.isVoteResultPublic))?'（'+item.voteCount+' 人选择）':'')}}"
-                            value="{{item.optionName}}" wx:for="{{selectedTask.voteTaskOptions}}">
+                            value="{{item.optionName}}" wx:for="{{selectedTask.voteTaskOptions}}" wx:key="optionName">
                     <view slot="content">
                         {{item.optionDescription}}
                         <t-progress percentage="{{utils.toFixed2(item.voteCount*100/participantCount)}}"
-                                    style="margin-top: {{item.optionDescription?'12':'4'}}rpx" theme="plump"
+                                    style="margin-top: {{item.optionDescription?'12':'4'}}rpx;font-family: TCloudNumber, sans-serif;"
+                                    theme="plump"
                                     wx:if="{{utils.isVoteResultShow(selectedTask.status,selectedTask.isVoteResultPublic)}}"/>
                     </view>
                 </t-checkbox>

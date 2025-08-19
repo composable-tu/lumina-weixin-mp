@@ -58,9 +58,9 @@ interface IData {
     maxChoiceValue: number
 }
 
-const TaskTypeOptions = [{label: '签到', value: CHECK_IN}, {label: '抽签', value: LOTTERY}, {
+const TaskTypeOptions = [{label: '签到', value: CHECK_IN}, {
     label: '投票', value: VOTE
-},]
+}, {label: '抽签', value: LOTTERY, tag: '暂不可用'}]
 
 Page<IData, StoreInstance>({
     data: {
