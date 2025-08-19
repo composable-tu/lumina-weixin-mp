@@ -1,0 +1,63 @@
+<!--pages/subpages/lumina-setting/lumina-setting.wxml-->
+<wxs module="utils" src="../../../utils/CommonUtil.wxs"></wxs>
+
+<t-message id="t-message"/>
+
+<error-popup bind:visible-change="errorVisibleChange" message="{{errorMessage}}" visible="{{errorVisible}}"/>
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="title" slot="left">设置</view>
+</t-navbar>
+<scroll-view enable-passive enhanced scroll-with-animation scroll-y="{{true}}" show-scrollbar="{{false}}"
+             style="height:{{scrollHeightPx-44+safeAreaBottomPx}}px;">
+    <view class="pt-32rpx" wx:if="{{utils.isLogin(jwt)}}">
+        <t-cell-group theme="card">
+            <t-cell bordered="{{false}}"
+                    leftIcon="history" title="隐藏超过 7 天的日程和审批">
+                <t-switch bind:change="switchHideMore7Day" slot="note" value="{{isHideMore7DayEnabled}}"/>
+            </t-cell>
+        </t-cell-group>
+    </view>
+    <view class="pt-32rpx" wx:if="{{utils.isLogin(jwt)&&groupInfo.length>0}}">
+        <t-cell-group theme="card">
+            <t-cell bordered="{{false}}"
+                    description="{{isSupportSoter?'开启后，当您的账号在执行重要操作时，需要进行设备端 SOTER 生物认证才可进行下一步操作':'此设备不支持 SOTER 生物认证'}}"
+                    leftIcon="secured" title="SOTER 生物认证保护">
+                <t-switch bind:change="switchSoter" disabled="{{isLoading||isSoterLoading||!isSupportSoter}}"
+                          loading="{{isLoading||isSoterLoading}}"
+                          slot="note" value="{{isSoterEnabled}}" wx:if="{{!isLoading}}"/>
+            </t-cell>
+        </t-cell-group>
+    </view>
+    <view class="pt-32rpx mx-32rpx pb-32rpx">
+        <t-button bind:tap="logout" block disabled="{{!utils.isLogin(jwt)}}" size="large"
+                  theme="danger">{{utils.isLogin(jwt) ? '退出登录' : '尚未登录'}}</t-button>
+    </view>
+</scroll-view>
+
+<t-popup bind:visible-change="soterHelpPopupVisibleChange" placement="bottom" visible="{{soterHelpPopupVisible}}">
+    <view class="block">
+        <view class="flex items-center h-116rpx">
+            <view class="flex-1 text-center font-600 text-36rpx">什么是 SOTER 生物认证？</view>
+        </view>
+        <view class="mx-32rpx">
+            <view class="pb-12rpx text-28rpx">
+                TENCENT SOTER 是腾讯于 2015 年开始制定的生物认证平台与标准，在不获取用户指纹图案和/或面容的前提下实现可信的用户生物特征认证。
+            </view>
+            <view class="py-12rpx text-28rpx">
+                在琳琅问中开启 SOTER 生物认证保护开关后，该用户账号在执行任何重要操作时（如退出团体、投出投票），需通过
+                SOTER 生物认证后才可执行。
+            </view>
+            <view class="pt-12rpx text-28rpx">
+                <rich-text
+                        nodes="如果您的设备未经过腾讯 SOTER 终端设备认证，则无法在琳琅问中使用 SOTER 生物认证保护。<b>同理，如果您在支持 SOTER 的设备下使用琳琅问打开 SOTER 生物认证保护开关后，您将无法在任何未经过 SOTER 认证的设备下使用琳琅问执行重要操作。</b>"></rich-text>
+            </view>
+        </view>
+        <view class="mt-32rpx mx-32rpx flex">
+            <t-button bind:tap="continueSoter" block size="large" theme="light">我已知晓，下一步</t-button>
+        </view>
+        <view class="mt-32rpx mx-32rpx mb-32rpx flex">
+            <t-button bind:tap="closeSoterHelpPopup" block size="large" theme="light">取消</t-button>
+        </view>
+    </view>
+</t-popup>

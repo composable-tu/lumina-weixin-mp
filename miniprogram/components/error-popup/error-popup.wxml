@@ -1,0 +1,18 @@
+<!--components/error-popup/error-popup.wxml-->
+<t-message id="t-message"/>
+
+<t-overlay duration="{{300}}" visible="{{errorVisible}}" z-index="14514"/>
+
+<t-popup bind:visible-change="errorVisibleChange" close-on-overlay-click="{{false}}" placement="bottom"
+         show-overlay="{{false}}" visible="{{errorVisible}}"
+         z-index="14555">
+    <view class="block">
+        <view class="mx-32rpx mt-104rpx mb-96rpx">
+            <t-result description="{{errorMessage}}" theme="error" title="发生错误"/>
+        </view>
+        <view class="m-32rpx flex">
+            <t-button bind:tap="copyError" block class="mr-16rpx" size="large" theme="light">复制报错</t-button>
+            <t-button bind:tap="closeErrorPopup" block class="ml-16rpx" size="large" theme="light">确定</t-button>
+        </view>
+    </view>
+</t-popup>

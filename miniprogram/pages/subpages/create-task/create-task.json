@@ -1,0 +1,24 @@
+{
+  "component": true,
+  "disableScroll": true,
+  "styleIsolation": "apply-shared",
+  "usingComponents": {
+    "error-popup": "/components/error-popup/error-popup",
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-cell": "tdesign-miniprogram/cell/cell",
+    "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
+    "t-checkbox": "tdesign-miniprogram/checkbox/checkbox",
+    "t-checkbox-group": "tdesign-miniprogram/checkbox-group/checkbox-group",
+    "t-date-time-picker": "tdesign-miniprogram/date-time-picker/date-time-picker",
+    "t-footer": "tdesign-miniprogram/footer/footer",
+    "t-input": "tdesign-miniprogram/input/input",
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-picker": "tdesign-miniprogram/picker/picker",
+    "t-picker-item": "tdesign-miniprogram/picker-item/picker-item",
+    "t-popup": "tdesign-miniprogram/popup/popup",
+    "t-result": "tdesign-miniprogram/result/result",
+    "t-stepper": "tdesign-miniprogram/stepper/stepper",
+    "t-switch": "tdesign-miniprogram/switch/switch",
+    "t-tag": "tdesign-miniprogram/tag/tag"
+  }
+}

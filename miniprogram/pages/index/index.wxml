@@ -1,0 +1,49 @@
+<!--index.wxml-->
+<wxs module="utils" src="../../utils/CommonUtil.wxs"></wxs>
+
+<error-popup bind:visible-change="errorVisibleChange" message="{{errorMessage}}" visible="{{errorVisible}}"/>
+
+<t-navbar t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="title" slot="left">日程</view>
+</t-navbar>
+
+<t-pull-down-refresh bind:refresh="onRefresh" enable-passive enhanced
+                     loadingTexts="{{['下拉刷新', '松手刷新', '', '加载完成']}}" scroll-with-animation
+                     scroll-y="{{true}}" show-scrollbar="{{false}}" style="height: {{scrollHeightPx-56}}px;"
+                     usingCustomNavbar value="{{isRefreshing}}">
+    <view class="pt-96rpx mx-32rpx" wx:if="{{!isRefreshing&&!utils.isLogin(jwt)}}">
+        <t-result theme="default" title="尚未登录"/>
+        <t-button bind:tap="login" block class="mt-32rpx" size="large" theme="primary">登录</t-button>
+    </view>
+
+    <view class="pt-96rpx mx-32rpx" wx:if="{{!isRefreshing&&utils.isLogin(jwt)&&taskInfo.length===0}}">
+        <t-result description="暂未收到任何任务" theme="default" title="暂无任务"/>
+    </view>
+
+    <view class="py-16rpx">
+        <view class="py-16rpx" wx:for="{{taskInfo}}"
+              wx:if="{{(isHideMore7DayEnabled&&!utils.isMoreThan7Day(item.endTime)||!isHideMore7DayEnabled)}}"
+              wx:key="taskId">
+            <t-cell-group theme="card">
+                <t-cell arrow bind:click="onTaskItemClick" data-task-id="{{item.taskId}}"
+                        data-task-type="{{item.taskType}}" description="{{utils.formatTime(item.endTime)+' 截止'}}"
+                        hover
+                        left-icon="{{item.taskType==='CHECK_IN'?'calendar-2':item.taskType==='VOTE'?'chart-bar':item.taskType==='LOTTERY'?'gift':''}}"
+                        title="{{item.taskName}}">
+                    <t-tag slot="note" theme="{{utils.themedCheckInTaskStatus(item.status)}}" variant="light">
+                        {{utils.semanticsCheckInTaskStatus(item.status)}}
+                    </t-tag>
+                </t-cell>
+            </t-cell-group>
+        </view>
+        <view wx:if="{{isHideMore7DayEnabled&&utils.isLogin(jwt)&&taskInfo.length!==0}}">
+            <t-footer text="— 已隐藏超过 7 天的任务 —"/>
+        </view>
+    </view>
+
+</t-pull-down-refresh>
+
+<t-fab aria-label="新建" bind:click="handleFabTaskClick" icon="add" style="margin-bottom: {{40+safeMarginBottomPx}}px;"
+       using-custom-navbar wx:if="{{utils.isLogin(jwt)}}"></t-fab>
+
+<t-action-sheet bind:selected="handleFabSelected" id="t-action-sheet"/>

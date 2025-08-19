@@ -1,0 +1,92 @@
+<!--pages/index/selected-task/check-in/check-in.wxml-->
+<wxs module="utils" src="../../../../utils/CommonUtil.wxs"></wxs>
+
+<t-message id="t-message"/>
+
+<error-popup bind:visible-change="errorVisibleChange" message="{{errorMessage}}" visible="{{errorVisible}}"/>
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="title" slot="left">签到任务详情</view>
+</t-navbar>
+
+<t-pull-down-refresh bind:refresh="onRefresh" enable-passive enhanced
+                     loadingTexts="{{['下拉刷新', '松手刷新', '', '加载完成']}}"
+                     scroll-with-animation scroll-y="{{true}}"
+                     show-scrollbar="{{false}}"
+                     style="height: {{scrollHeightPx-44+safeAreaBottomPx}}px;" usingCustomNavbar
+                     value="{{isRefreshing}}">
+    <view class="pt-96rpx mx-32rpx" wx:if="{{!isRefreshing&&!utils.isLogin(jwt)}}">
+        <t-result theme="default" title="尚未登录"/>
+        <t-button bind:tap="login" block class="mt-32rpx" size="large" theme="primary">登录</t-button>
+    </view>
+
+    <view class="pt-96rpx mx-32rpx" wx:if="{{utils.isLogin(jwt)&&isSelectedNotFound}}">
+        <t-result description="此页面需要传参才可正常显示。若您在稳定版中遇见此提示，可联系客服进行反馈。" theme="default"
+                  title="参数缺失"/>
+    </view>
+
+    <view wx:if="{{utils.isLogin(jwt)&&!isSelectedNotFound&&selectedTask}}">
+        <view class="pt-32rpx">
+            <t-cell-group theme="card">
+                <t-cell hover note="{{selectedTask.taskName}}" title="任务名"/>
+                <t-cell hover note="{{utils.semanticsCheckInTaskType(selectedTask.checkInType)}}" title="任务类型"/>
+                <t-cell hover title="任务状态">
+                    <t-tag slot="note" theme="{{utils.themedCheckInTaskStatus(selectedTask.status)}}" variant="light">
+                        {{utils.semanticsCheckInTaskStatus(selectedTask.status)}}
+                    </t-tag>
+                </t-cell>
+                <t-cell hover note="{{utils.formatTime(selectedTask.endTime)}}" title="结束时间"/>
+            </t-cell-group>
+        </view>
+
+        <view class="pt-32rpx" wx:if="{{countDownTime>0}}">
+            <t-cell-group theme="card">
+                <t-cell hover title="倒计时">
+                    <t-count-down bind:finish="onRefresh"
+                                  format="{{countDownTime>24*60*60*1000?'DD 天 HH:mm:ss':'HH:mm:ss'}}" slot="note"
+                                  time="{{countDownTime}}"/>
+                </t-cell>
+            </t-cell-group>
+        </view>
+
+        <view class="pt-32rpx">
+            <t-cell-group theme="card">
+                <t-cell hover title="目标团体">
+                    <view slot="note">
+                        <view class="mr-16rpx inline">{{selectedTask.groupName ? selectedTask.groupName : selectedTask.groupId}}</view>
+                        <t-tag class="inline-block vertical-bottom" theme="default" variant="light"
+                               wx:if="{{selectedTask.groupName}}">
+                            {{selectedTask.groupId}}
+                        </t-tag>
+                    </view>
+                </t-cell>
+                <t-cell hover note="{{selectedTask.creatorName?selectedTask.creatorName:selectedTask.creatorId}}"
+                        title="创建者"/>
+                <t-cell hover note="{{utils.formatTime(selectedTask.createdAt)}}" title="创建时间"/>
+            </t-cell-group>
+        </view>
+
+        <view class="pt-32rpx" wx:if="{{selectedTask.description}}">
+            <t-cell-group theme="card">
+                <t-cell description="{{selectedTask.description}}" hover title="任务描述"/>
+            </t-cell-group>
+        </view>
+
+        <view class="pt-32rpx mx-32rpx"
+              wx:if="{{utils.isLogin(jwt)&&!isSelectedNotFound&&selectedTask.checkInType==='TOKEN'&&selectedTask.status === 'PENDING'}}">
+            <t-input bind:change="onCheckInTokenInput" borderless class="rounded-18rpx" confirm-type="done"
+                     cursor-spacing="30" label="签到验证码" placeholder="必填" value="{{checkInTokenValue}}"/>
+        </view>
+    </view>
+
+    <view class="pt-32rpx mx-32rpx flex" wx:if="{{utils.isLogin(jwt)&&!isSelectedNotFound&&selectedTask}}">
+        <t-button bind:tap="startCheckIn" block
+                  disabled="{{(selectedTask.checkInType==='TOKEN'&&!checkInTokenValue)||selectedTask.status!=='PENDING'||isCheckInStarting}}"
+                  loading="{{isCheckInStarting}}" size="large"
+                  theme="primary">{{selectedTask.status === 'PENDING' ? ((selectedTask.checkInType === 'TOKEN' && !checkInTokenValue) ? '需在上方填入签到验证码' : '执行签到') : selectedTask.status === 'EXPIRED' ? '签到已结束' : selectedTask.status === 'NOT_REQUIRED' ? '您无需参与' : selectedTask.status === 'PARTICIPATED' ? '已成功签到' : ''}}
+        </t-button>
+    </view>
+
+    <view class="pt-32rpx" style="padding-bottom: {{safeAreaBottomPx}}px;"/>
+
+</t-pull-down-refresh>

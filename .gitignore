@@ -1,0 +1,29 @@
+# Windows
+[Dd]esktop.ini
+Thumbs.db
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+
+# Node.js
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+vlt-lock.json
+
+# Weixin Mini Program
+/miniprogram/miniprogram_npm/**
+!/miniprogram/miniprogram_npm/.gitkeep
+
+# Other
+project.private.config.json
+/.idea/
+miniprogram/env.ts
+
+

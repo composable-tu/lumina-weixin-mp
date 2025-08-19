@@ -1,0 +1,28 @@
+<!--pages/oss-licenses/oss-licenses.wxml-->
+<wxs module="utils" src="../../utils/CommonUtil.wxs"></wxs>
+
+<t-message id="t-message"/>
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="ml-16rpx" slot="left">
+        <view class="mr-16rpx text-36rpx font-600 inline">{{title}}</view>
+        <t-tag class="inline-block vertical-bottom" size="small" theme="default" variant="light-outline">
+            {{utils.formatVersion(version)}}
+        </t-tag>
+    </view>
+</t-navbar>
+
+<scroll-view class="block" enhanced scroll-x scroll-y
+             style="height:{{scrollHeightPx-44+safeAreaBottomPx}}px;" type="list">
+    <view class="p-32rpx">
+        <t-notice-bar bind:tap="copyRepo" class="repo-link mb-32rpx rounded-18rpx" content="{{repoLink}}"
+                      prefixIcon="{{false}}" visible="{{true}}" wx:if="{{repoLink !== ''}}">
+            <view slot="prefix-icon">
+                <t-icon name="{{repoType==='GitHub'?'logo-github':(repoType==='GitLab'?'logo-gitlab':'git-repository')}}"></t-icon>
+            </view>
+        </t-notice-bar>
+
+        <text class="break-words whitespace-pre-wrap;" user-select>{{licenseBody}}</text>
+    </view>
+    <view style="height: {{safeAreaBottomPx}}px"></view>
+</scroll-view>

@@ -1,0 +1,67 @@
+<!--pages/about/about.wxml-->
+<t-message id="t-message"/>
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="title" slot="left">关于</view>
+</t-navbar>
+
+<scroll-view enable-passive enhanced scroll-with-animation scroll-y="{{true}}" show-scrollbar="{{false}}"
+             style="height: {{scrollHeightPx-44+safeAreaBottomPx}}px;" type="list">
+    <view class="pt-128rpx mx-32rpx flex justify-center items-center">
+            <image class="h-auto self-center" mode="widthFix" bind:tap="copyEnvData"
+                   src="{{ theme === 'dark' ? '../../assets/LogoColorWhite.png' : '../../assets/LogoColorBlack.png' }}"
+                   style="width: 66%;"/>
+    </view>
+    <view class="mt-128rpx">
+        <t-cell-group theme="card">
+            <t-cell bordered hover leftIcon="application" note="{{luminaVersion}}" title="版本"/>
+            <t-cell arrow="{{false}}" bordered hover leftIcon="internet" note="还没做好" title="官网"/>
+            <t-cell arrow bind:click="feedbackPopup" bordered="{{false}}" hover leftIcon="help-circle"
+                    title="问题反馈"/>
+        </t-cell-group>
+    </view>
+    <view class="mt-32rpx">
+        <t-cell-group theme="card">
+            <t-cell arrow bind:click="luminaOpenSource" bordered hover leftIcon="logo-github" title="GitHub 开源项目"/>
+            <t-cell arrow bind:click="ossLicense" bordered hover leftIcon="certificate" title="开放源代码许可"/>
+            <t-cell arrow bind:click="openDataStatementPopup" bordered="{{false}}" hover leftIcon="data-base"
+                    title="信息数据安全声明"/>
+        </t-cell-group>
+    </view>
+    <view class="mt-64rpx py-16rpx">
+        <t-footer links="{{footerLink}}" text="ICP 备案号：{{icpInfo}}"/>
+    </view>
+    <view style="height: {{safeAreaBottomPx}}px"></view>
+</scroll-view>
+
+<t-popup bind:visible-change="onFeedbackPopupVisibleChange" placement="bottom" visible="{{feedbackPopupVisible}}">
+    <view class="popupBlock">
+        <view class="flex items-center h-116rpx">
+            <view class="flex-1 text-center font-600 popupTitleColor">问题反馈</view>
+        </view>
+        <view class="mx-32rpx mt-16rpx">
+            <t-button block contact open-type="contact" size="large" theme="primary">打开客服会话</t-button>
+        </view>
+        <view class="my-32rpx mx-32rpx flex">
+            <t-button bind:tap="closeFeedbackPopup" block size="large" theme="light">返回
+            </t-button>
+        </view>
+    </view>
+</t-popup>
+
+<t-popup bind:visible-change="dataStatementPopupVisibleChange" placement="bottom"
+         visible="{{dataStatementPopupVisible}}">
+    <view class="block">
+        <view class="flex items-center h-116rpx">
+            <view class="flex-1 text-center font-600 text-36rpx">信息数据安全声明</view>
+        </view>
+        <view class="mx-32rpx">
+            <view class="pb-12rpx">
+                {{mpName + '基于琳琅问（LuminaPJ）解决方案，由' + orgName + '进行本地侧部署并提供服务，其登录、团体、任务和审批信息均由' + orgName + '所有、提供和管理。琳琅问不存储、不处理、不传输、不掌握任何来自' + orgName + '的信息数据。'}}
+            </view>
+        </view>
+        <view class="mt-32rpx mx-32rpx mb-32rpx flex">
+            <t-button bind:tap="closeDataStatementPopup" block size="large" theme="primary">确定</t-button>
+        </view>
+    </view>
+</t-popup>

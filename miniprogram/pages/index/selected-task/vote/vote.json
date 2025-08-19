@@ -1,0 +1,23 @@
+{
+  "component": true,
+  "disableScroll": true,
+  "styleIsolation": "apply-shared",
+  "usingComponents": {
+    "error-popup": "/components/error-popup/error-popup",
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-cell": "tdesign-miniprogram/cell/cell",
+    "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
+    "t-checkbox": "tdesign-miniprogram/checkbox/checkbox",
+    "t-checkbox-group": "tdesign-miniprogram/checkbox-group/checkbox-group",
+    "t-count-down": "tdesign-miniprogram/count-down/count-down",
+    "t-fab": "tdesign-miniprogram/fab/fab",
+    "t-input": "tdesign-miniprogram/input/input",
+    "t-message": "tdesign-miniprogram/message/message",
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-popup": "tdesign-miniprogram/popup/popup",
+    "t-progress": "tdesign-miniprogram/progress/progress",
+    "t-pull-down-refresh": "tdesign-miniprogram/pull-down-refresh/pull-down-refresh",
+    "t-result": "tdesign-miniprogram/result/result",
+    "t-tag": "tdesign-miniprogram/tag/tag"
+  }
+}

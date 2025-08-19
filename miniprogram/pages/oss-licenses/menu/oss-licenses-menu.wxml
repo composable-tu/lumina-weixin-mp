@@ -1,0 +1,31 @@
+<!--pages/oss-licenses/menu/oss-licenses-menu.wxml-->
+<wxs module="utils" src="../../../utils/CommonUtil.wxs"></wxs>
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="ml-16rpx text-36rpx font-600" slot="left">开放源代码许可</view>
+</t-navbar>
+
+<scroll-view enable-passive enhanced scroll-with-animation scroll-y show-scrollbar
+             style="height: {{scrollHeightPx-44+safeAreaBottomPx}}px;" type="list">
+    <view class="pt-32rpx pb-32rpx">
+        <!-- TODO: t-cell-group 在面对大量列表时有性能问题，希望实现异步优化
+        但是不知道怎么异步，因为性能问题是 TDesign 上游的问题 -->
+        <t-cell-group theme="card">
+            <t-cell bind:tap="licenseDistClick" data-index="{{index}}" description="{{item.description}}" hover
+                    wx:for="{{ossLicensesDist}}" wx:key="index">
+                <view slot="title">
+                    <text class="text-32rpx">{{item.name + (item.publisher !== '' ? (' (' + item.publisher + ')') : '')}}</text>
+                </view>
+                <view class="inline" slot="description">
+                    <t-tag class="mr-16rpx mt-12rpx inline-block" size="medium" theme="default" variant="light">
+                        {{utils.formatVersion(item.version)}}
+                    </t-tag>
+                    <t-tag class="mt-12rpx inline-block" size="medium" theme="primary" variant="light">
+                        {{item.licenseName}}
+                    </t-tag>
+                </view>
+            </t-cell>
+        </t-cell-group>
+    </view>
+    <view style="height:{{safeAreaBottomPx}}px;"></view>
+</scroll-view>

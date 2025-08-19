@@ -1,0 +1,11 @@
+{
+  "component": true,
+  "disableScroll": true,
+  "styleIsolation": "apply-shared",
+  "usingComponents": {
+    "t-cell": "tdesign-miniprogram/cell/cell",
+    "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-tag": "tdesign-miniprogram/tag/tag"
+  }
+}

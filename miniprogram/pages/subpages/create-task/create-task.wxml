@@ -1,0 +1,222 @@
+<!--pages/subpages/create-task/create-task.wxml-->
+<wxs module="utils" src="../../../utils/CommonUtil.wxs"></wxs>
+
+<t-message id="t-message"/>
+
+<error-popup bind:visible-change="errorVisibleChange" message="{{errorMessage}}" visible="{{errorVisible}}"/>
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="title" slot="left">创建任务</view>
+</t-navbar>
+
+<scroll-view enable-passive enhanced scroll-with-animation scroll-y="{{true}}" show-scrollbar="{{false}}"
+             style="height: {{scrollHeightPx-44+safeAreaBottomPx}}px;">
+    <view class="pt-96rpx mx-32rpx" wx:if="{{!isRefreshing&&!utils.isLogin(jwt)}}">
+        <t-result theme="default" title="尚未登录"/>
+        <t-button bind:tap="login" block class="mt-32rpx" size="large" theme="primary">登录</t-button>
+    </view>
+
+    <view class="pt-96rpx mx-32rpx" wx:if="{{!isRefreshing&&utils.isLogin(jwt)&&administratedGroup.length===0}}">
+        <t-result description="未成为管理的团体成员暂时无法申请创建团体任务，请耐心等待后续更新" theme="default"
+                  title="尚无正在管理的团体"/>
+    </view>
+
+    <view class="pt-32rpx" wx:if="{{utils.isLogin(jwt)&&administratedGroup.length!==0}}">
+        <t-cell-group theme="card">
+            <t-cell arrow bind:click="onTaskTypePickerStart" hover note="{{selectedTaskType.label}}" title="任务类型"/>
+            <t-cell arrow bind:click="onGroupPickerStart" hover note="{{selectedGroup.groupId}}" title="目标团体"/>
+            <t-cell arrow bind:click="onEndDateTimePickerStart" hover note="{{utils.formatTime(endDateTime)}}"
+                    title="结束时间"/>
+        </t-cell-group>
+    </view>
+
+    <view class="pt-32rpx" wx:if="{{utils.isLogin(jwt)&&administratedGroup.length!==0}}">
+        <t-cell-group theme="card">
+            <t-input bind:change="onChangeTaskTitle" confirm-type="next" cursor-spacing="30" label="任务标题"
+                     placeholder="选填" tips="{{selectedTaskType.label?'默认值：'+selectedTaskType.label+'任务':''}}"
+                     value="{{taskTitleValue}}"/>
+            <t-input bind:change="onChangeTaskDescription" borderless="{{true}}" confirm-type="done" cursor-spacing="30"
+                     label="任务描述" placeholder="选填" value="{{taskDescriptionValue}}"/>
+        </t-cell-group>
+    </view>
+
+    <view class="pt-32rpx"
+          wx:if="{{utils.isLogin(jwt)&&administratedGroup.length!==0&&selectedTaskType.value==='CHECK_IN'}}">
+        <t-cell-group theme="card">
+            <t-cell arrow bind:click="startCheckInSetting" hover
+                    note="{{isCheckInTokenEnabled&&checkInTokenValue?'验证码签到':'普通签到'}}"
+                    title="签到任务配置"/>
+        </t-cell-group>
+    </view>
+
+
+    <view wx:if="{{utils.isLogin(jwt)&&administratedGroup.length!==0&&selectedTaskType.value==='VOTE'}}">
+        <view class="pt-32rpx" wx:for="{{voteOptions}}" wx:key="sortOrder">
+            <t-cell-group theme="card">
+                <t-input bind:change="onChangeVoteOptionName" borderless="{{false}}" confirm-type="next"
+                         cursor-spacing="30" data-index="{{index}}" label="选项名" placeholder="必填"
+                         tips="{{'第 '+item.sortOrder+' 个选项'}}" value="{{item.optionName}}"/>
+                <t-input bind:change="onChangeVoteOptionDescription" borderless="{{true}}" confirm-type="done"
+                         cursor-spacing="30" data-index="{{index}}" label="选项描述" placeholder="选填"
+                         value="{{item.optionDescription}}"/>
+            </t-cell-group>
+        </view>
+        <view class="pt-32rpx mx-32rpx flex">
+            <t-button bind:tap="removeVoteOption" block class="mr-16rpx"
+                      disabled="{{isTaskCreating||voteOptions.length<=2}}" icon="minus-circle" size="large"
+                      theme="light" variant="outline">减少选项
+            </t-button>
+            <t-button bind:tap="addVoteOption" block class="ml-16rpx" disabled="{{isTaskCreating}}"
+                      icon="add-circle" size="large" theme="light" variant="outline">增加选项
+            </t-button>
+        </view>
+    </view>
+
+    <view class="pt-32rpx"
+          wx:if="{{utils.isLogin(jwt)&&administratedGroup.length!==0&&selectedTaskType.value==='VOTE'}}">
+        <t-cell-group theme="card">
+            <t-cell arrow bind:click="startVoteSetting" hover
+                    note="{{maxChoiceValue===1?'单选投票':'多选，最多选 '+maxChoiceValue+' 个'}}"
+                    title="投票任务配置"/>
+        </t-cell-group>
+    </view>
+
+    <view class="pt-32rpx" wx:if="{{utils.isLogin(jwt)&&administratedGroup.length!==0&&selectedGroup.groupId}}">
+        <t-cell-group theme="card">
+            <t-cell description="白名单模式下，仅选中的成员可参与任务，且团体新成员默认无法参与任务" hover
+                    title="白名单模式">
+                <t-switch bind:change="switchWhiteList" slot="note" value="{{isWhiteListEnabled}}"/>
+            </t-cell>
+            <t-cell arrow bind:click="onGroupMemberPickerStart" hover
+                    title="{{isWhiteListEnabled?'白名单成员':'排除成员'}}">
+                <view slot="note">{{'已选中 ' + selectedGroupMember.length + ' 位成员'}}</view>
+            </t-cell>
+        </t-cell-group>
+    </view>
+
+    <view class="pt-32rpx mx-32rpx flex" wx:if="{{utils.isLogin(jwt)&&administratedGroup.length!==0}}">
+        <t-button bind:tap="createTask" block disabled="{{isTaskCreating}}"
+                  icon="{{isSoterEnabled&&!isTaskCreating?'secured':''}}" loading="{{isTaskCreating}}" size="large"
+                  theme="primary">创建
+        </t-button>
+    </view>
+
+    <view class="mx-32rpx py-16rpx" wx:if="{{utils.isLogin(jwt)&&administratedGroup.length!==0}}">
+        <t-footer class="text-center"
+                  text="为保证任务数据不失真，任务信息一经创建不可修改，请在创建前核对信息是否准确完整"/>
+    </view>
+    <view style="padding-bottom: {{safeAreaBottomPx}}px;"/>
+</scroll-view>
+
+
+<t-picker bindcancel="onTaskTypePickerCancel" bindchange="onTaskTypePickerChange" cancelBtn="取消" confirmBtn="确认"
+          title="任务类型" value="{{[selectedTaskType.value]}}" visible="{{taskTypePickerVisible}}">
+    <t-picker-item options="{{TaskTypeOptions}}">
+        <block wx:for="{{TaskTypeOptions}}" wx:key="value"/>
+    </t-picker-item>
+</t-picker>
+
+<t-picker bindcancel="onGroupPickerCancel" bindchange="onGroupPickerChange" cancelBtn="取消" confirmBtn="确认"
+          title="目标团体" value="{{[selectedGroup.groupId]}}" visible="{{groupPickerVisible}}">
+    <t-picker-item format="{{groupFormatter}}" options="{{administratedGroup}}">
+        <block wx:for="{{administratedGroup}}" wx:for-item="option" wx:key="groupId">
+            <view class="flex items-center justify-center ml-12rpx" slot="label-suffix--{{index}}"
+                  wx:if="{{option.groupId}}">
+                <t-tag theme="default">{{option.groupId}}</t-tag>
+            </view>
+        </block>
+    </t-picker-item>
+</t-picker>
+
+<t-date-time-picker bindcancel="hideEndDateTimePicker" bindchange="onEndDateTimePickerChange"
+                    format="YYYY-MM-DDTHH:mm:ss" mode="second" title="结束时间" value="{{endDateTime}}"
+                    visible="{{endDateTimePickerVisible}}"/>
+
+<t-popup bind:visible-change="setCheckInSettingPopupVisibleChange" placement="bottom"
+         visible="{{setCheckInSettingPopupVisible}}">
+    <view class="block">
+        <view class="flex items-center h-116rpx">
+            <view class="flex-1 text-center font-600 text-36rpx">签到任务配置</view>
+        </view>
+        <view>
+            <t-cell bordered="{{isCheckInTokenEnabled}}"
+                    description="开启后，团体成员在执行签到任务时需提供与下方一致的验证码"
+                    hover title="签到时需验证码">
+                <t-switch bind:change="switchCheckInToken" slot="note" value="{{isCheckInTokenEnabled}}"/>
+            </t-cell>
+            <t-input bind:change="onChangeCheckInToken" borderless="{{true}}" cursor-spacing="30" label="验证码"
+                     placeholder="请输入签到验证码" tips="请保管好输入的验证码，验证码一经提交无法再次查看"
+                     value="{{checkInTokenValue}}" wx:if="{{isCheckInTokenEnabled}}"/>
+        </view>
+        <view class="m-32rpx flex">
+            <t-button bind:tap="closeSetCheckInSetting" block size="large" theme="primary">确定
+            </t-button>
+        </view>
+    </view>
+</t-popup>
+
+<t-popup bind:visible-change="setVoteSettingPopupVisibleChange" placement="bottom"
+         visible="{{setVoteSettingPopupVisible}}">
+    <view class="block">
+        <view class="flex items-center h-116rpx">
+            <view class="flex-1 text-center font-600 text-36rpx">签到任务配置</view>
+        </view>
+        <view>
+            <t-cell-group>
+                <t-cell description="开启后，团体成员在结束时间之前可撤回投票重投" hover title="投票可撤回">
+                    <t-switch bind:change="switchVoteCanRecall" slot="note" value="{{isVoteCanRecallEnabled}}"/>
+                </t-cell>
+                <t-cell description="开启后，仅任务创建者可查看投票结果" hover title="结果不公开">
+                    <t-switch bind:change="switchVoteResultPublic" slot="note" value="{{isVoteResultPublicDisabled}}"/>
+                </t-cell>
+                <t-cell hover title="最大多选数">
+                    <t-stepper bind:change="onChangeMaxChoice" max="{{voteOptions.length}}" min="1" slot="note"
+                               theme="filled" value="{{maxChoiceValue}}"/>
+                </t-cell>
+            </t-cell-group>
+        </view>
+        <view class="m-32rpx flex">
+            <t-button bind:tap="closeSetVoteSetting" block size="large" theme="primary">确定
+            </t-button>
+        </view>
+    </view>
+</t-popup>
+
+<t-popup bind:visible-change="onGroupMemberPickerChange" close-on-overlay-click="{{false}}" placement="bottom"
+         visible="{{groupMemberPickerVisible}}">
+    <view class="block">
+        <view class="flex items-center h-116rpx">
+            <view class="flex-1 text-center font-600 text-36rpx">选择成员</view>
+        </view>
+        <scroll-view enable-passive enhanced scroll-with-animation scroll-y="{{true}}" show-scrollbar
+                     style="height: 40vh;">
+            <t-checkbox-group bind:change="handleGroupMemberChange" value="{{selectedGroupMemberCache}}">
+                <t-checkbox icon="rectangle" value="{{item.userId}}" wx:for="{{memberFromSelectedGroup}}"
+                            wx:key="userId">
+                    <view slot="label">
+                        <view class="mr-16rpx inline">{{item.userName ? item.userName : item.userId}}</view>
+                        <t-tag class="inline-block vertical-bottom mr-16rpx" theme="default" variant="light"
+                               wx:if="{{item.userName}}">
+                            {{item.userId}}
+                        </t-tag>
+                        <t-tag class="inline-block vertical-bottom"
+                               theme="{{item.permission==='MEMBER'?'default':item.permission==='ADMIN'?'primary':'success'}}"
+                               variant="light"
+                               wx:if="{{utils.isAdminAndSuperAdmin(item.permission)}}">
+                            {{utils.semanticsPermission(item.permission)}}
+                        </t-tag>
+                    </view>
+                </t-checkbox>
+            </t-checkbox-group>
+        </scroll-view>
+        <view class="mx-32rpx flex">
+            <t-button bind:tap="submitGroupMember" block size="large" theme="primary">确定
+            </t-button>
+        </view>
+        <view class="mt-32rpx mx-32rpx mb-32rpx flex">
+            <t-button bind:tap="cancelSelectGroupMember" block size="large" theme="light">取消
+            </t-button>
+        </view>
+    </view>
+</t-popup>
+

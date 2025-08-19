@@ -1,0 +1,224 @@
+<!--pages/subpages/group-management/selected-group-user/selected-group-user.wxml-->
+<wxs module="utils" src="../../../../utils/CommonUtil.wxs"></wxs>
+
+<t-message id="t-message"/>
+
+<error-popup bind:visible-change="errorVisibleChange" message="{{errorMessage}}" visible="{{errorVisible}}"/>
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="title" slot="left">团体用户管理</view>
+</t-navbar>
+
+<t-pull-down-refresh bind:refresh="onRefresh" enable-passive enhanced
+                     loadingTexts="{{['下拉刷新', '松手刷新', '', '加载完成']}}"
+                     scroll-with-animation scroll-y="{{true}}"
+                     show-scrollbar="{{false}}"
+                     style="height: {{scrollHeightPx-44+safeAreaBottomPx}}px;" usingCustomNavbar
+                     value="{{isRefreshing}}">
+    <view class="pt-96rpx mx-32rpx" wx:if="{{!isRefreshing&&!utils.isLogin(jwt)}}">
+        <t-result theme="default" title="尚未登录"/>
+        <t-button bind:tap="login" block class="mt-32rpx" size="large" theme="primary">登录</t-button>
+    </view>
+
+    <view class="pt-96rpx mx-32rpx" wx:if="{{utils.isLogin(jwt)&&isSelectedNotFound}}">
+        <t-result description="此页面需要传参才可正常显示。若您在稳定版中遇见此提示，可联系客服进行反馈。" theme="default"
+                  title="参数缺失"/>
+    </view>
+
+    <view class="py-16rpx">
+        <view class="py-16rpx" wx:for="{{selectedGroupMemberList}}" wx:key="groupId">
+            <t-cell-group theme="card">
+                <t-cell arrow="{{utils.isAdminAndSuperAdmin(selectedGroupUserPermission)}}"
+                        bind:click="onClickGroupUserItem" data-user-id="{{item.userId}}"
+                        description="{{item.userName?item.userId:''}}" hover
+                        title="{{item.userName?item.userName:item.userId}}">
+                    <t-tag slot="note"
+                           theme="{{item.permission==='MEMBER'?'default':utils.isAdmin(item.permission)?'primary':'success'}}"
+                           variant="light">
+                        {{utils.semanticsPermission(item.permission)}}
+                    </t-tag>
+                </t-cell>
+            </t-cell-group>
+        </view>
+    </view>
+
+    <view style="padding-bottom: {{safeAreaBottomPx}}px;"/>
+</t-pull-down-refresh>
+
+<t-fab aria-label="批量管理" bind:click="manageGroupUser" icon="user-setting" using-custom-navbar
+       wx:if="{{!isRefreshing&&utils.isLogin(jwt)&&selectedGroupMemberList.length>0&&utils.isAdminAndSuperAdmin(selectedGroupUserPermission)}}"></t-fab>
+
+<t-action-sheet bind:selected="handleManageGroupUserFabSelected" id="t-action-sheet"/>
+
+<t-popup bind:visible-change="userDetailPopupVisibleChange" placement="bottom" visible="{{userDetailPopupVisible}}">
+    <view class="block">
+        <view class="flex items-center h-116rpx">
+            <view class="flex-1 text-center font-600 text-36rpx">用户详情</view>
+        </view>
+        <view>
+            <t-cell-group>
+                <t-cell hover note="{{clickedUserId}}" title="用户号"/>
+                <t-cell hover note="{{clickedUserName}}" title="用户名" wx:if="{{clickedUserName}}"/>
+                <t-cell hover title="成员权限">
+                    <t-tag slot="note"
+                           theme="{{clickedUserPermission==='MEMBER'?'default':utils.isAdmin(clickedUserPermission)?'primary':'success'}}"
+                           variant="light" wx:if="{{utils.semanticsPermission(clickedUserPermission)!==''}}">
+                        {{utils.semanticsPermission(clickedUserPermission)}}
+                    </t-tag>
+                </t-cell>
+            </t-cell-group>
+        </view>
+        <view wx:if="{{utils.isSuperAdmin(selectedGroupUserPermission)}}">
+            <view class="mt-32rpx mx-32rpx flex" wx:if="{{!utils.isAdminAndSuperAdmin(clickedUserPermission)}}">
+                <t-button bind:tap="setAdmin" block disabled="{{isAdminSetting||isAdminRemoving||isUserDeleting}}"
+                          icon="{{isSoterEnabled&&!isAdminSetting?'secured':''}}" loading="{{isAdminSetting}}"
+                          size="large" theme="light">设为管理员
+                </t-button>
+            </view>
+            <view class="mt-32rpx mx-32rpx flex" wx:if="{{utils.isAdmin(clickedUserPermission)}}">
+                <t-button bind:tap="removeAdmin" block disabled="{{isAdminSetting||isAdminRemoving||isUserDeleting}}"
+                          icon="{{isSoterEnabled&&!isAdminRemoving?'secured':''}}" loading="{{isAdminRemoving}}"
+                          size="large" theme="light">撤销管理员
+                </t-button>
+            </view>
+        </view>
+        <view wx:if="{{utils.isAdminAndSuperAdmin(selectedGroupUserPermission)}}">
+            <view class="mt-32rpx mx-32rpx flex" wx:if="{{!utils.isAdminAndSuperAdmin(clickedUserPermission)}}">
+                <t-button bind:tap="deleteUser" block disabled="{{isAdminSetting||isAdminRemoving||isUserDeleting}}"
+                          icon="{{isSoterEnabled&&!isUserDeleting?'secured':''}}" loading="{{isUserDeleting}}"
+                          size="large" theme="danger">移除成员
+                </t-button>
+            </view>
+        </view>
+        <view class="my-32rpx mx-32rpx flex">
+            <t-button bind:tap="closeUserDetailPopup" block
+                      disabled="{{isAdminSetting||isAdminRemoving||isUserDeleting}}" size="large" theme="light">返回
+            </t-button>
+        </view>
+    </view>
+</t-popup>
+
+<t-popup bind:visible-change="onSetAdminGroupMemberPickerChange" close-on-overlay-click="{{false}}" placement="bottom"
+         visible="{{setAdminGroupMemberPickerVisible}}">
+    <view class="block">
+        <view class="flex items-center h-116rpx">
+            <view class="flex-1 text-center font-600 text-36rpx">批量设置管理员</view>
+        </view>
+        <scroll-view enable-passive enhanced scroll-with-animation scroll-y="{{true}}" show-scrollbar
+                     style="height: 40vh;">
+            <t-checkbox-group bind:change="handleSetAdminGroupMemberChange"
+                              value="{{selectedSetAdminGroupMemberCache}}">
+                <t-checkbox icon="rectangle" value="{{item.userId}}" wx:for="{{selectedGroupMemberList}}"
+                            wx:if="{{!utils.isAdminAndSuperAdmin(item.permission)}}" wx:key="userId">
+                    <view slot="label">
+                        <view class="mr-16rpx inline">{{item.userName ? item.userName : item.userId}}</view>
+                        <t-tag class="inline-block vertical-bottom mr-16rpx" theme="default" variant="light"
+                               wx:if="{{item.userName}}">
+                            {{item.userId}}
+                        </t-tag>
+                        <t-tag class="inline-block vertical-bottom"
+                               theme="{{item.permission==='MEMBER'?'default':item.permission==='ADMIN'?'primary':'success'}}"
+                               variant="light" wx:if="{{utils.isAdminAndSuperAdmin(item.permission)}}">
+                            {{utils.semanticsPermission(item.permission)}}
+                        </t-tag>
+                    </view>
+                </t-checkbox>
+            </t-checkbox-group>
+        </scroll-view>
+        <view class="mx-32rpx flex" wx:if="{{utils.isSuperAdmin(selectedGroupUserPermission)}}">
+            <t-button bind:tap="batchSetAdmin" block
+                      disabled="{{isAdminBatchSetting||selectedSetAdminGroupMemberCache.length===0}}"
+                      icon="{{isSoterEnabled&&!isAdminBatchSetting?'secured':''}}" loading="{{isAdminBatchSetting}}"
+                      size="large" theme="light">设为管理员
+            </t-button>
+        </view>
+        <view class="mt-32rpx mx-32rpx mb-32rpx flex">
+            <t-button bind:tap="cancelSelectSetAdminGroupMember" block disabled="{{isAdminBatchSetting}}" size="large"
+                      theme="light">取消
+            </t-button>
+        </view>
+    </view>
+</t-popup>
+
+<t-popup bind:visible-change="onRemoveAdminGroupMemberPickerChange" close-on-overlay-click="{{false}}"
+         placement="bottom" visible="{{removeAdminGroupMemberPickerVisible}}">
+    <view class="block">
+        <view class="flex items-center h-116rpx">
+            <view class="flex-1 text-center font-600 text-36rpx">批量撤销管理员</view>
+        </view>
+        <scroll-view enable-passive enhanced scroll-with-animation scroll-y="{{true}}" show-scrollbar
+                     style="height: 40vh;">
+            <t-checkbox-group bind:change="handleRemoveAdminGroupMemberChange"
+                              value="{{selectedRemoveAdminGroupMemberCache}}">
+                <t-checkbox icon="rectangle" value="{{item.userId}}" wx:for="{{selectedGroupMemberList}}"
+                            wx:if="{{utils.isAdmin(item.permission)}}" wx:key="userId">
+                    <view slot="label">
+                        <view class="mr-16rpx inline">{{item.userName ? item.userName : item.userId}}</view>
+                        <t-tag class="inline-block vertical-bottom mr-16rpx" theme="default" variant="light"
+                               wx:if="{{item.userName}}">
+                            {{item.userId}}
+                        </t-tag>
+                        <t-tag class="inline-block vertical-bottom"
+                               theme="{{item.permission==='MEMBER'?'default':item.permission==='ADMIN'?'primary':'success'}}"
+                               variant="light" wx:if="{{utils.isAdminAndSuperAdmin(item.permission)}}">
+                            {{utils.semanticsPermission(item.permission)}}
+                        </t-tag>
+                    </view>
+                </t-checkbox>
+            </t-checkbox-group>
+        </scroll-view>
+        <view class="mx-32rpx flex" wx:if="{{utils.isSuperAdmin(selectedGroupUserPermission)}}">
+            <t-button bind:tap="batchRemoveAdmin" block
+                      disabled="{{isAdminBatchRemoving||selectedRemoveAdminGroupMemberCache.length===0}}"
+                      icon="{{isSoterEnabled&&!isAdminBatchRemoving?'secured':''}}" loading="{{isAdminBatchRemoving}}"
+                      size="large" theme="light">撤销管理员
+            </t-button>
+        </view>
+        <view class="mt-32rpx mx-32rpx mb-32rpx flex">
+            <t-button bind:tap="cancelSelectRemoveAdminGroupMember" block disabled="{{isAdminBatchRemoving}}"
+                      size="large" theme="light">取消
+            </t-button>
+        </view>
+    </view>
+</t-popup>
+
+<t-popup bind:visible-change="onDeleteGroupMemberPickerChange" close-on-overlay-click="{{false}}" placement="bottom"
+         visible="{{deleteGroupMemberPickerVisible}}">
+    <view class="block">
+        <view class="flex items-center h-116rpx">
+            <view class="flex-1 text-center font-600 text-36rpx">批量移除成员</view>
+        </view>
+        <scroll-view enable-passive enhanced scroll-with-animation scroll-y="{{true}}" show-scrollbar
+                     style="height: 40vh;">
+            <t-checkbox-group bind:change="handleDeleteGroupMemberChange" value="{{selectedDeleteGroupMemberCache}}">
+                <t-checkbox icon="rectangle" value="{{item.userId}}" wx:for="{{selectedGroupMemberList}}"
+                            wx:if="{{!utils.isAdminAndSuperAdmin(item.permission)}}" wx:key="userId">
+                    <view slot="label">
+                        <view class="mr-16rpx inline">{{item.userName ? item.userName : item.userId}}</view>
+                        <t-tag class="inline-block vertical-bottom mr-16rpx" theme="default" variant="light"
+                               wx:if="{{item.userName}}">
+                            {{item.userId}}
+                        </t-tag>
+                        <t-tag class="inline-block vertical-bottom"
+                               theme="{{item.permission==='MEMBER'?'default':item.permission==='ADMIN'?'primary':'success'}}"
+                               variant="light" wx:if="{{utils.isAdminAndSuperAdmin(item.permission)}}">
+                            {{utils.semanticsPermission(item.permission)}}
+                        </t-tag>
+                    </view>
+                </t-checkbox>
+            </t-checkbox-group>
+        </scroll-view>
+        <view class="mx-32rpx flex" wx:if="{{utils.isAdminAndSuperAdmin(selectedGroupUserPermission)}}">
+            <t-button bind:tap="batchDeleteUser" block
+                      disabled="{{isUserBatchDeleting||selectedDeleteGroupMemberCache.length===0}}"
+                      icon="{{isSoterEnabled&&!isUserBatchDeleting?'secured':''}}" loading="{{isUserBatchDeleting}}"
+                      size="large" theme="light">移除成员
+            </t-button>
+        </view>
+        <view class="mt-32rpx mx-32rpx mb-32rpx flex">
+            <t-button bind:tap="cancelSelectDeleteGroupMember" block disabled="{{isUserBatchDeleting}}" size="large"
+                      theme="light">取消
+            </t-button>
+        </view>
+    </view>
+</t-popup>

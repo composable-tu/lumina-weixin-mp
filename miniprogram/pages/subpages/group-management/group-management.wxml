@@ -1,0 +1,44 @@
+<!--pages/subpages/group-management/group-management.wxml-->
+<wxs module="utils" src="../../../utils/CommonUtil.wxs"></wxs>
+
+<error-popup bind:visible-change="errorVisibleChange" message="{{errorMessage}}" visible="{{errorVisible}}"/>
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="title" slot="left">团体管理</view>
+</t-navbar>
+
+<t-pull-down-refresh bind:refresh="onRefresh" enable-passive enhanced
+                     loadingTexts="{{['下拉刷新', '松手刷新', '', '加载完成']}}" scroll-with-animation
+                     scroll-y="{{true}}" show-scrollbar="{{false}}"
+                     style="height: {{scrollHeightPx-44+safeAreaBottomPx}}px;" usingCustomNavbar
+                     value="{{isRefreshing}}">
+    <view class="pt-96rpx mx-32rpx" wx:if="{{!isRefreshing&&!utils.isLogin(jwt)}}">
+        <t-result theme="default" title="尚未登录"/>
+        <t-button bind:tap="login" block class="mt-32rpx" size="large" theme="primary">登录</t-button>
+    </view>
+
+    <view class="pt-96rpx mx-32rpx" wx:if="{{!isRefreshing&&utils.isLogin(jwt)&&groupInfo.length===0}}">
+        <t-result theme="default" title="尚未加入任何团体"/>
+        <t-button bind:tap="joinNewGroup" block class="mt-32rpx" size="large" theme="primary">加入团体</t-button>
+    </view>
+
+    <view class="py-16rpx">
+        <view class="py-16rpx" wx:for="{{groupInfo}}" wx:key="groupId">
+            <t-cell-group theme="card">
+                <t-cell arrow bind:click="onGroupItemClick" data-group-id="{{item.groupId}}"
+                        description="{{item.groupId}}" hover title="{{item.groupName}}">
+                    <t-tag slot="note"
+                           theme="{{item.permission==='MEMBER'?'default':item.permission==='ADMIN'?'primary':'success'}}"
+                           variant="light">
+                        {{utils.semanticsPermission(item.permission)}}
+                    </t-tag>
+                </t-cell>
+            </t-cell-group>
+        </view>
+    </view>
+
+    <view style="padding-bottom: {{safeAreaBottomPx}}px;"/>
+</t-pull-down-refresh>
+
+<t-fab aria-label="加入团体" bind:click="joinNewGroup" icon="usergroup-add" using-custom-navbar
+       wx:if="{{!isRefreshing&&utils.isLogin(jwt)&&groupInfo.length>0}}"></t-fab>

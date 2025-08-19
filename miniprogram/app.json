@@ -1,0 +1,49 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/user/user",
+    "pages/approval/approval",
+    "pages/about/about",
+    "pages/logs/logs",
+    "custom-tab-bar/index",
+    "pages/oss-licenses/oss-licenses",
+    "pages/oss-licenses/menu/oss-licenses-menu",
+    "pages/login/login",
+    "pages/subpages/lumina-setting/lumina-setting",
+    "pages/subpages/group-management/group-management",
+    "pages/subpages/join-group/join-group",
+    "pages/subpages/group-management/selected-group/selected-group",
+    "pages/approval/selected-approval/selected-approval",
+    "pages/subpages/group-management/selected-group-user/selected-group-user",
+    "pages/subpages/create-task/create-task",
+    "pages/index/selected-task/check-in/check-in",
+    "pages/index/selected-task/vote/vote"
+  ],
+  "tabBar": {
+    "custom": true,
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/approval/approval",
+        "text": "审批"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我"
+      }
+    ]
+  },
+  "themeLocation": "theme.json",
+  "window": {
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "@navTxtStyle",
+    "navigationBarTitleText": "琳琅问",
+    "disableScroll": true
+  },
+  "componentFramework": "glass-easel",
+  "lazyCodeLoading": "requiredComponents",
+  "darkmode": true
+}

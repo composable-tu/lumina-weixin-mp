@@ -1,0 +1,118 @@
+<!--pages/index/selected-task/vote/vote.wxml-->
+<wxs module="utils" src="../../../../utils/CommonUtil.wxs"></wxs>
+
+<t-message id="t-message"/>
+
+<error-popup bind:visible-change="errorVisibleChange" message="{{errorMessage}}" visible="{{errorVisible}}"/>
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="title" slot="left">投票任务详情</view>
+</t-navbar>
+
+<t-pull-down-refresh bind:refresh="onRefresh" enable-passive enhanced
+                     loadingTexts="{{['下拉刷新', '松手刷新', '', '加载完成']}}"
+                     scroll-with-animation scroll-y="{{true}}"
+                     show-scrollbar="{{false}}"
+                     style="height: {{scrollHeightPx-44+safeAreaBottomPx}}px;" usingCustomNavbar
+                     value="{{isRefreshing}}">
+    <view class="pt-96rpx mx-32rpx" wx:if="{{!isRefreshing&&!utils.isLogin(jwt)}}">
+        <t-result theme="default" title="尚未登录"/>
+        <t-button bind:tap="login" block class="mt-32rpx" size="large" theme="primary">登录</t-button>
+    </view>
+
+    <view class="pt-96rpx mx-32rpx" wx:if="{{utils.isLogin(jwt)&&isSelectedNotFound}}">
+        <t-result description="此页面需要传参才可正常显示。若您在稳定版中遇见此提示，可联系客服进行反馈。" theme="default"
+                  title="参数缺失"/>
+    </view>
+
+    <view wx:if="{{utils.isLogin(jwt)&&!isSelectedNotFound&&selectedTask}}">
+        <view class="pt-32rpx">
+            <t-cell-group theme="card">
+                <t-cell hover note="{{selectedTask.taskName}}" title="任务名"/>
+                <t-cell hover
+                        note="{{selectedTask.voteMaxSelectable===1?'单选投票':'多选，最多选 '+selectedTask.voteMaxSelectable+' 个'}}"
+                        title="任务类型"/>
+                <t-cell hover
+                        note="{{(selectedTask.voteCanRecall?'投票后可撤回':'投票后不可撤回')+'，'+(selectedTask.isVoteResultPublic?'结果公开':'结果不公开')}}"
+                        title="其它"/>
+                <t-cell hover title="任务状态">
+                    <t-tag slot="note" theme="{{utils.themedTaskStatus(selectedTask.status)}}" variant="light">
+                        {{utils.semanticsTaskStatus(selectedTask.status)}}
+                    </t-tag>
+                </t-cell>
+                <t-cell hover note="{{utils.formatTime(selectedTask.endTime)}}" title="结束时间"/>
+            </t-cell-group>
+        </view>
+
+        <view class="pt-32rpx" wx:if="{{countDownTime>0}}">
+            <t-cell-group theme="card">
+                <t-cell hover title="倒计时">
+                    <t-count-down bind:finish="onRefresh"
+                                  format="{{countDownTime>24*60*60*1000?'DD 天 HH:mm:ss':'HH:mm:ss'}}" slot="note"
+                                  time="{{countDownTime}}"/>
+                </t-cell>
+            </t-cell-group>
+        </view>
+
+        <view class="pt-32rpx">
+            <t-cell-group theme="card">
+                <t-cell hover title="目标团体">
+                    <view slot="note">
+                        <view class="mr-16rpx inline">{{selectedTask.groupName ? selectedTask.groupName : selectedTask.groupId}}</view>
+                        <t-tag class="inline-block vertical-bottom" theme="default" variant="light"
+                               wx:if="{{selectedTask.groupName}}">
+                            {{selectedTask.groupId}}
+                        </t-tag>
+                    </view>
+                </t-cell>
+                <t-cell hover note="{{selectedTask.creatorName?selectedTask.creatorName:selectedTask.creatorId}}"
+                        title="创建者"/>
+                <t-cell hover note="{{utils.formatTime(selectedTask.createdAt)}}" title="创建时间"/>
+            </t-cell-group>
+        </view>
+
+        <view class="pt-32rpx" wx:if="{{selectedTask.description}}">
+            <t-cell-group theme="card">
+                <t-cell description="{{selectedTask.description}}" hover title="任务描述"/>
+            </t-cell-group>
+        </view>
+
+        <view class="pt-32rpx mx-32rpx">
+            <t-checkbox-group bind:change="onSelectedVoteOptionsChange" class="rounded-18rpx overflow-hidden"
+                              disabled="{{selectedTask.status!=='PENDING'}}" max="{{selectedTask.voteMaxSelectable}}"
+                              value="{{selectedVoteOptionsCache}}">
+                <t-checkbox icon="rectangle"
+                            label="{{item.optionName+((item.voteCount&&utils.isVoteResultShow(selectedTask.status,selectedTask.isVoteResultPublic))?'（'+item.voteCount+' 人选择）':'')}}"
+                            value="{{item.optionName}}" wx:for="{{selectedTask.voteTaskOptions}}">
+                    <view slot="content">
+                        {{item.optionDescription}}
+                        <t-progress percentage="{{utils.toFixed2(item.voteCount*100/participantCount)}}"
+                                    style="margin-top: {{item.optionDescription?'12':'4'}}rpx" theme="plump"
+                                    wx:if="{{utils.isVoteResultShow(selectedTask.status,selectedTask.isVoteResultPublic)}}"/>
+                    </view>
+                </t-checkbox>
+            </t-checkbox-group>
+        </view>
+
+    </view>
+
+    <view class="pt-32rpx mx-32rpx flex" wx:if="{{utils.isLogin(jwt)&&!isSelectedNotFound&&selectedTask}}">
+        <t-button bind:tap="startVote" block
+                  disabled="{{selectedVoteOptionsCache.length===0||selectedTask.status!=='PENDING'||isVoteStarting}}"
+                  icon="{{(selectedTask.status==='PENDING'&&isSoterEnabled&&!isVoteStarting)?'secured':''}}"
+                  loading="{{isVoteStarting}}" size="large" theme="primary">
+            {{selectedTask.status === 'PENDING' ? (selectedVoteOptionsCache.length === 0 ? '需选择投票选项' : '执行投票') : selectedTask.status === 'EXPIRED' ? '投票已结束' : selectedTask.status === 'NOT_REQUIRED' ? '您无需参与' : selectedTask.status === 'PARTICIPATED' ? '已成功投票' : ''}}
+        </t-button>
+    </view>
+
+    <view class="pt-32rpx mx-32rpx flex"
+          wx:if="{{utils.isLogin(jwt)&&selectedTask.voteCanRecall&&selectedTask.status==='PARTICIPATED'&&!isSelectedNotFound&&selectedTask}}">
+        <t-button bind:tap="recallVote" block disabled="{{selectedTask.status!=='PARTICIPATED'||isVoteRecalling}}"
+                  icon="{{isSoterEnabled&&!isVoteRecalling?'secured':''}}"
+                  loading="{{isVoteRecalling}}" size="large" theme="light" variant="outline">撤回投票
+        </t-button>
+    </view>
+
+    <view class="pt-32rpx" style="padding-bottom: {{safeAreaBottomPx}}px;"/>
+
+</t-pull-down-refresh>

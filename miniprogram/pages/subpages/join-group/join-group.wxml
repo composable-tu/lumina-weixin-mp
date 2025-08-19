@@ -1,0 +1,39 @@
+<!--pages/subpages/join-group/join-group.wxml-->
+<wxs module="utils" src="../../../utils/CommonUtil.wxs"></wxs>
+
+<error-popup bind:visible-change="errorVisibleChange" message="{{errorMessage}}" visible="{{errorVisible}}"/>
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="title" slot="left">加入团体</view>
+</t-navbar>
+
+<scroll-view enable-passive enhanced scroll-with-animation scroll-y="{{true}}" show-scrollbar="{{false}}"
+             style="height: {{scrollHeightPx-44+safeAreaBottomPx}}px;">
+    <view class="pt-96rpx mx-32rpx" wx:if="{{!utils.isLogin(jwt)}}">
+        <t-result theme="default" title="尚未登录"/>
+        <t-button bind:tap="login" block class="mt-32rpx" size="large" theme="primary">登录</t-button>
+    </view>
+
+    <view class="pt-32rpx mx-32rpx" wx:if="{{utils.isLogin(jwt)}}">
+        <t-input bind:change="onGroupIdInput" borderless class="rounded-18rpx" confirm-type="next" cursor-spacing="30"
+                 label="团体号" placeholder="必填" value="{{groupIdValue}}"/>
+        <t-input bind:change="onGroupPreAuthTokenInput" borderless class="rounded-18rpx mt-32rpx" confirm-type="next"
+                 cursor-spacing="30" label="团体预授权凭证" placeholder="选填"
+                 tips="预授权凭证可免审批加入团体，由团体管理员控制，不填则需管理员手动审批"
+                 value="{{groupPreAuthTokenValue}}"/>
+        <t-input bind:change="onUserIdInput" borderless class="rounded-18rpx mt-32rpx" confirm-type="next"
+                 cursor-spacing="30" disabled="{{isUserSignedIn||isLoading}}" label="用户号" placeholder="必填"
+                 tips="{{isUserSignedIn?'已自动填入':'请按照团体管理员的相关要求填写，可能是工号、学号等语义化编号'}}"
+                 value="{{userIdValue}}"/>
+        <t-input bind:change="onUserNameInput" borderless class="rounded-18rpx mt-32rpx" confirm-type="done"
+                 cursor-spacing="30" disabled="{{isUserSignedIn||isLoading}}" label="用户名" placeholder="必填"
+                 tips="{{isUserSignedIn?'已自动填入':''}}" value="{{userNameValue}}"/>
+        <t-input bind:change="onRequesterCommentInput" borderless class="rounded-18rpx mt-32rpx" confirm-type="done"
+                 cursor-spacing="30" label="留言" placeholder="选填" tips="仅申请者本人和团体管理员可查看留言内容"
+                 value="{{requesterCommentValue}}"/>
+        <t-button bind:tap="joinNewGroup" block class="mt-32rpx" cursor-spacing="30" disabled="{{isJoining}}"
+                  loading="{{isJoining}}" size="large" theme="primary">加入团体
+        </t-button>
+    </view>
+
+</scroll-view>

@@ -1,0 +1,56 @@
+var EMPTY_JWT = 'Empty JSON Web Token';
+
+function formatNumber(n) {
+    var s = n.toString()
+    return s[1] ? s : '0' + s
+}
+
+module.exports = {
+    formatVersion: function (version) {
+        return '1234567890'.indexOf(version[0]) !== -1 ? 'v' + version : version;
+    }, isLogin: function (jwt) {
+        return jwt !== EMPTY_JWT && jwt !== null && jwt !== undefined && jwt !== '';
+    }, semanticsPermission: function (permission) {
+        return permission === 'MEMBER' ? '普通成员' : permission === 'ADMIN' ? '管理员' : permission === 'SUPER_ADMIN' ? '超级管理员' : ''
+    }, isAdminAndSuperAdmin: function (permission) {
+        return permission === 'ADMIN' || permission === 'SUPER_ADMIN'
+    }, isSuperAdmin: function (permission) {
+        return permission === 'SUPER_ADMIN'
+    }, isAdmin: function (permission) {
+        return permission === 'ADMIN'
+    }, semanticsApprovalType: function (approvalType) {
+        return approvalType === 'TASK_CREATION' ? '创建任务' : approvalType === 'GROUP_JOIN' ? '加入团体' : approvalType === 'TASK_EXPAND_GROUP' ? '扩展任务团体' : '';
+    }, semanticsApprovalStatus: function (approvalStatus) {
+        return approvalStatus === 'PENDING' ? '待审批' : approvalStatus === 'APPROVED' ? '已通过' : approvalStatus === 'AUTO_PASSED' ? '自动通过' : approvalStatus === 'REJECTED' ? '已拒绝' : approvalStatus === 'WITHDRAWN' ? '已撤回' : '';
+    }, themedApprovalStatus: function (taskType) {
+        return taskType === 'REJECTED' || taskType === 'WITHDRAWN' ? 'default' : taskType === 'PENDING' ? 'warning' : taskType === 'AUTO_PASSED' ? 'primary' : taskType === 'APPROVED' ? 'success' : ''
+    }, formatTime: function (dateString) {
+        var date = getDate(dateString);
+        var year = date.getFullYear()
+        var month = date.getMonth() + 1
+        var day = date.getDate()
+        var hour = date.getHours()
+        var minute = date.getMinutes()
+        var second = date.getSeconds()
+
+        return ([year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':'))
+    }, isMoreThan7Day: function (dateString) {
+        var date = getDate(dateString);
+        var now = Date.now();
+        return (now - date.getTime()) / (1000 * 60 * 60 * 24) > 7;
+    }, semanticsCheckInTaskStatus: function (taskStatus) {
+        return taskStatus === 'MARK_AS_PARTICIPANT' ? '标记为已参与' : taskStatus === 'MARK_AS_NOT_PARTICIPANT' ? '标记为未参与' : taskStatus === 'MARK_AS_PENDING' ? '标记为待定' : taskStatus === 'PENDING' ? '待参与' : taskStatus === 'STARTED' ? '进行中' : taskStatus === 'PARTICIPATED' ? '已参与' : taskStatus === 'NOT_REQUIRED' ? '无需参与' : taskStatus === 'EXPIRED' ? '已过期' : '';
+    }, themedCheckInTaskStatus: function (taskStatus) {
+        return taskStatus === 'MARK_AS_NOT_PARTICIPANT' ? 'danger' : taskStatus === 'NOT_REQUIRED' || taskStatus === 'EXPIRED' ? 'default' : taskStatus === 'PENDING' || taskStatus === 'MARK_AS_PENDING' ? 'warning' : taskStatus === 'PARTICIPATED' || taskStatus === 'MARK_AS_PARTICIPANT' ? 'success' : ''
+    }, semanticsCheckInTaskType: function (taskType) {
+        return taskType === 'TOKEN' ? '验证码签到' : taskType === 'ORDINARY' ? '普通签到' : '';
+    }, semanticsTaskStatus: function (taskStatus) {
+        return taskStatus === 'PENDING' ? '待参与' : taskStatus === 'STARTED' ? '进行中' : taskStatus === 'PARTICIPATED' ? '已参与' : taskStatus === 'NOT_REQUIRED' ? '无需参与' : taskStatus === 'EXPIRED' ? '已过期' : '';
+    }, themedTaskStatus: function (taskStatus) {
+        return taskStatus === 'NOT_REQUIRED' || taskStatus === 'EXPIRED' ? 'default' : taskStatus === 'PENDING' ? 'warning' : taskStatus === 'PARTICIPATED' ? 'success' : ''
+    }, toFixed2: function (num) {
+        return Math.round(num * 100) / 100;
+    }, isVoteResultShow: function (status, isVoteResultPublic) {
+        return (status === 'PARTICIPATED' || status === 'EXPIRED') && isVoteResultPublic
+    }
+};

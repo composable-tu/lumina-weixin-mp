@@ -1,0 +1,18 @@
+{
+  "component": true,
+  "disableScroll": true,
+  "styleIsolation": "apply-shared",
+  "usingComponents": {
+    "error-popup": "/components/error-popup/error-popup",
+    "t-action-sheet": "tdesign-miniprogram/action-sheet/action-sheet",
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-cell": "tdesign-miniprogram/cell/cell",
+    "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
+    "t-fab": "tdesign-miniprogram/fab/fab",
+    "t-footer": "tdesign-miniprogram/footer/footer",
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-popup": "tdesign-miniprogram/popup/popup",
+    "t-result": "tdesign-miniprogram/result/result",
+    "t-tag": "tdesign-miniprogram/tag/tag"
+  }
+}
