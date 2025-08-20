@@ -184,6 +184,7 @@ async function getSelectedVoteTaskInfo(that: WechatMiniprogram.Page.Instance<IDa
     if (selectVoteTaskInfo == null) that.setData({
         errorMessage: "未找到任务", errorVisible: true
     }); else {
+        if (selectVoteTaskInfo.voteTaskOptions) selectVoteTaskInfo.voteTaskOptions.sort((a, b) => a.sortOrder - b.sortOrder);
         const countDownTime = new Date(selectVoteTaskInfo.endTime).getTime() - Date.now()
         const targetGroupInfo: GroupInfo | undefined = that.getGroupInfo().find((groupInfo: GroupInfo) => groupInfo.groupId === selectVoteTaskInfo.groupId)
         const isParticipated = selectVoteTaskInfo.status === "PARTICIPATED"
