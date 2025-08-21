@@ -299,7 +299,6 @@ Page<IData, StoreInstance>({
                     await taskStoreUtil.checkTaskStatus(this)
                     wx.navigateBack()
                 } catch (e) {
-                    console.log(e)
                     const errMsg = getErrorMessage(e)
                     if (errMsg === "用户手动取消 SOTER 生物认证") normalToast(this, errMsg); else this.setData({
                         errorMessage: getErrorMessage(e), errorVisible: true
@@ -344,7 +343,6 @@ Page<IData, StoreInstance>({
                     await taskStoreUtil.checkTaskStatus(this)
                     wx.navigateBack()
                 } catch (e) {
-                    console.log(e)
                     const errMsg = getErrorMessage(e)
                     if (errMsg === "用户手动取消 SOTER 生物认证") normalToast(this, errMsg); else this.setData({
                         errorMessage: getErrorMessage(e), errorVisible: true

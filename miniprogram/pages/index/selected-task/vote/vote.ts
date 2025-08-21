@@ -20,6 +20,7 @@ interface IData {
     selectedTaskId: string
     selectedTask: VoteTaskInfo,
     isGroupAdmin: boolean
+    isTaskCreator: boolean
     countDownTime: number
     selectedVoteOptionsCache: string[]
     participantCount: number
@@ -196,6 +197,7 @@ async function getSelectedVoteTaskInfo(that: WechatMiniprogram.Page.Instance<IDa
             selectedTask: selectVoteTaskInfo,
             countDownTime: countDownTime,
             isGroupAdmin: that.getGroupInfo().length !== 0 ? util.isAdminAndSuperAdmin(targetGroupInfo.permission) : false,
+            isTaskCreator: that.getUserInfo().userId === selectVoteTaskInfo.creatorId,
             selectedVoteOptionsCache: isParticipated ? usersChoice : [],
             participantCount: isResultPublic ? participantCount : 0,
         })

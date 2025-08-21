@@ -1,2 +1,99 @@
 <!--pages/subpages/task-management/check-in/check-in.wxml-->
-<text>pages/subpages/task-management/check-in/check-in.wxml</text>
+<wxs module="utils" src="../../../../utils/CommonUtil.wxs"></wxs>
+
+<t-message id="t-message"/>
+
+<error-popup bind:visible-change="errorVisibleChange" message="{{errorMessage}}" visible="{{errorVisible}}"/>
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="title" slot="left">任务参与数据</view>
+</t-navbar>
+
+<t-pull-down-refresh bind:refresh="onRefresh" enable-passive enhanced
+                     loadingTexts="{{['下拉刷新', '松手刷新', '', '加载完成']}}" scroll-with-animation
+                     scroll-y="{{true}}" show-scrollbar="{{false}}"
+                     style="height: {{scrollHeightPx-44+safeAreaBottomPx}}px;" usingCustomNavbar
+                     value="{{isRefreshing}}">
+    <view class="pt-96rpx mx-32rpx" wx:if="{{!isRefreshing&&!utils.isLogin(jwt)}}">
+        <t-result theme="default" title="尚未登录"/>
+        <t-button bind:tap="login" block class="mt-32rpx" size="large" theme="primary">登录</t-button>
+    </view>
+
+    <view class="py-16rpx">
+        <view class="py-16rpx"
+              wx:for="{{selectedTask.memberList}}" wx:key="userId">
+            <t-cell-group theme="card">
+                <t-cell arrow bind:click="onUserItemClick" data-user-id="{{item.userId}}"
+                        description="{{item.participatedAt&&item.status==='PARTICIPATED'?utils.formatTime(item.participatedAt):''}}"
+                        hover>
+                    <view slot="title">
+                        <view class="mr-16rpx inline">{{item.userName ? item.userName : item.userId}}</view>
+                        <t-tag class="inline-block vertical-bottom" theme="default" variant="light"
+                               wx:if="{{item.userId!==''}}">
+                            {{item.userId}}
+                        </t-tag>
+                    </view>
+                    <t-tag slot="note" theme="{{utils.themedCheckInTaskStatus(item.status)}}" variant="light">
+                        {{utils.semanticsCheckInTaskStatus(item.status)}}
+                    </t-tag>
+                </t-cell>
+            </t-cell-group>
+        </view>
+    </view>
+
+    <view style="padding-bottom: {{safeAreaBottomPx}}px;"/>
+</t-pull-down-refresh>
+
+<t-popup bind:visible-change="userParticipatedDetailPopupVisibleChange" placement="bottom"
+         visible="{{userParticipatedDetailPopupVisible}}">
+    <view class="block">
+        <view class="flex items-center h-116rpx">
+            <view class="flex-1 text-center font-600 text-36rpx">用户参与详情</view>
+        </view>
+        <view>
+            <t-cell-group>
+                <t-cell hover note="{{clickedUserId}}" title="用户号"/>
+                <t-cell hover note="{{clickedUserName}}" title="用户名" wx:if="{{clickedUserName}}"/>
+                <t-cell hover title="参与状态">
+                    <t-tag slot="note" theme="{{utils.themedCheckInTaskStatus(clickedUserStatus)}}" variant="light">
+                        {{utils.semanticsCheckInTaskStatus(clickedUserStatus)}}
+                    </t-tag>
+                </t-cell>
+                <t-cell hover note="{{clickedUserParticipatedAt?utils.formatTime(clickedUserParticipatedAt):''}}"
+                        title="参与时间" wx:if="{{clickedUserParticipatedAt&&clickedUserStatus==='PARTICIPATED'}}"/>
+            </t-cell-group>
+        </view>
+        <view wx:if="{{isTaskCreator}}">
+            <view class="mt-32rpx mx-32rpx flex"
+                  wx:if="{{clickedUserStatus!=='MARK_AS_PARTICIPANT'&&clickedUserStatus!=='PARTICIPATED'}}">
+                <t-button bind:tap="markUserAsParticipant" block
+                          disabled="{{isParticipantMarking||isPendingMarking||isNotParticipantMarking}}"
+                          icon="{{isSoterEnabled&&!isParticipantMarking?'secured':''}}"
+                          loading="{{isParticipantMarking}}"
+                          size="large" theme="light">标记为已参与
+                </t-button>
+            </view>
+            <view class="mt-32rpx mx-32rpx flex" wx:if="{{clickedUserStatus!=='MARK_AS_PENDING'}}">
+                <t-button bind:tap="markUserAsPending" block
+                          disabled="{{isParticipantMarking||isPendingMarking||isNotParticipantMarking}}"
+                          icon="{{isSoterEnabled&&!isPendingMarking?'secured':''}}" loading="{{isPendingMarking}}"
+                          size="large" theme="light">标记为待定
+                </t-button>
+            </view>
+            <view class="mt-32rpx mx-32rpx flex" wx:if="{{clickedUserStatus!=='MARK_AS_NOT_PARTICIPANT'}}">
+                <t-button bind:tap="markUserAsNotParticipant" block
+                          disabled="{{isParticipantMarking||isPendingMarking||isNotParticipantMarking}}"
+                          icon="{{isSoterEnabled&&!isNotParticipantMarking?'secured':''}}"
+                          loading="{{isNotParticipantMarking}}"
+                          size="large" theme="danger">标记为未参与
+                </t-button>
+            </view>
+        </view>
+        <view class="my-32rpx mx-32rpx flex">
+            <t-button bind:tap="closeUserParticipatedDetailPopup" block
+                      disabled="{{isParticipantMarking||isPendingMarking||isNotParticipantMarking}}" size="large"
+                      theme="light">返回
+            </t-button>
+        </view>
+    </view>
+</t-popup>

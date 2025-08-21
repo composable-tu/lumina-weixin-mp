@@ -19,6 +19,7 @@ interface IData {
     selectedTaskId: string
     selectedTask: CheckInTaskInfo,
     isGroupAdmin: boolean
+    isTaskCreator: boolean
     countDownTime: number
     checkInTokenValue: string
 }
@@ -122,6 +123,10 @@ Page<IData, StoreInstance>({
                 isCheckInStarting: false
             });
         }
+    },seeTaskParticipationData(){
+        wx.navigateTo({
+            url: '/pages/subpages/task-management/check-in/check-in?selectedTaskId=' + this.data.selectedTaskId
+        });
     }
 })
 
@@ -137,6 +142,7 @@ async function getSelectedCheckInTaskInfo(that: WechatMiniprogram.Page.Instance<
             selectedTask: selectCheckInTaskInfo,
             countDownTime: countDownTime,
             isGroupAdmin: that.getGroupInfo().length !== 0 ? util.isAdminAndSuperAdmin(targetGroupInfo.permission) : false,
+            isTaskCreator: that.getUserInfo().userId === selectCheckInTaskInfo.creatorId,
         })
     }
 }
