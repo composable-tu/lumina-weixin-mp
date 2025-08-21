@@ -44,6 +44,7 @@ page,::before,::after{--un-rotate:0;--un-rotate-x:0;--un-rotate-y:0;--un-rotate-
 .align-top{vertical-align:top;}
 .vertical-bottom{vertical-align:bottom;}
 .text-28rpx{font-size:28rpx;}
+.font-size-32rpx,
 .text-32rpx{font-size:32rpx;}
 .text-36rpx{font-size:36rpx;}
 .font-600{font-weight:600;}

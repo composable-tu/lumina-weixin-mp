@@ -8,9 +8,9 @@
 <scroll-view enable-passive enhanced scroll-with-animation scroll-y="{{true}}" show-scrollbar="{{false}}"
              style="height: {{scrollHeightPx-44+safeAreaBottomPx}}px;" type="list">
     <view class="pt-128rpx mx-32rpx flex justify-center items-center">
-            <image class="h-auto self-center" mode="widthFix" bind:tap="copyEnvData"
-                   src="{{ theme === 'dark' ? '../../assets/LogoColorWhite.png' : '../../assets/LogoColorBlack.png' }}"
-                   style="width: 66%;"/>
+        <image bind:tap="copyEnvData" class="h-auto self-center" mode="widthFix"
+               src="{{ theme === 'dark' ? '../../assets/LogoColorWhite.png' : '../../assets/LogoColorBlack.png' }}"
+               style="width: 66%;"/>
     </view>
     <view class="mt-128rpx">
         <t-cell-group theme="card">
@@ -65,3 +65,12 @@
         </view>
     </view>
 </t-popup>
+
+<t-dialog bind:cancel="copyEnvInfo" bind:confirm="closeEnvInfoDialog" cancel-btn="复制" confirm-btn="确定"
+          visible="{{showEnvInfoDialogVisible}}">
+    <scroll-view style="height: 55vh;" scroll-y slot="content" type="list">
+        <view class="font-size-32rpx mt-16rpx whitespace-pre-wrap">
+            {{envInfoData}}
+        </view>
+    </scroll-view>
+</t-dialog>

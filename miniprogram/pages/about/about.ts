@@ -15,7 +15,7 @@ Page({
             name: '用户协议', url: USER_AGREEMENT_URL, openType: '',
         }, {
             name: '隐私政策', url: PRIVACY_POLICY_URL, openType: '',
-        }]
+        }], envInfoData: ''
     }, touchNum: 0, onLoad() {
         const accountInfo = wx.getAccountInfoSync();
         this.setData({
@@ -81,6 +81,8 @@ Page({
                         "环境版本": accountInfo.miniProgram.envVersion,
                         "Lumina 版本": `${app.globalData.LUMINA_VERSION}`,
                         "主题": appBaseInfo.theme || 'light'
+                    }, "微信信息": {
+                        "小程序基础库版本": appBaseInfo.SDKVersion, "微信版本": appBaseInfo.version
                     }, "设备信息": {
                         "设备品牌": deviceInfo.brand,
                         "设备型号": deviceInfo.model,
@@ -131,15 +133,23 @@ Page({
 `
                     const sectionData = envData[section];
                     Object.keys(sectionData).forEach(key => {
-                        formattedData += `  ${key}: ${sectionData[key]}\n`;
+                        formattedData += `  ${key}：${sectionData[key]}\n`;
                     });
                     formattedData += '\n';
                 });
-                copyUtil(formattedData, Message, this);
+                this.setData({
+                    envInfoData: formattedData, showEnvInfoDialogVisible: true
+                })
             }
             this.touchNum = 0
         }, 1000)
         this.touchNum++
+    }, closeEnvInfoDialog() {
+        this.setData({
+            showEnvInfoDialogVisible: false
+        })
+    }, copyEnvInfo() {
+        copyUtil(this.data.envInfoData, Message, this)
     }
 })
 
