@@ -1,4 +1,4 @@
-import {defineConfig, presetUno} from "unocss";
+import {defineConfig, presetWind3} from "unocss";
 
 const remRE = /^-?[.\d]+rem$/
 
@@ -11,7 +11,7 @@ export default defineConfig({
                 i[1] = `${numericValue * 2 * 32}rpx`;
             }
         })
-    }, presets: [presetUno(),], rules: [[/^bg-(.*)$/, ([, c]) => ({'background-color': `#${c}`})],], theme: {
+    }, presets: [presetWind3(),], rules: [[/^bg-(.*)$/, ([, c]) => ({'background-color': `#${c}`})],], theme: {
         preflightRoot: ["page,::before,::after"]
     },
 })
