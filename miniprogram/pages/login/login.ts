@@ -1,9 +1,8 @@
 // pages/login/login.ts
-
 import {loginStoreUtil, luminaLogin} from "../../utils/store-utils/LoginStoreUtil";
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {store, StoreInstance} from "../../utils/MobX";
-import {ICP_ID, PRIVACY_POLICY_URL, USER_AGREEMENT_URL} from "../../env";
+import {ICP_ID} from "../../env";
 import {checkIsSupportSoter} from "../../utils/security/SoterUtil";
 import {getErrorMessage} from "../../utils/CommonUtil";
 
@@ -25,9 +24,11 @@ interface IData {
 Page<IData, StoreInstance>({
     data: {
         footerLink: [{
-            name: '用户协议', url: USER_AGREEMENT_URL, openType: '',
+            name: '用户协议',
+            url: '/pages/subpages/agreement-docs/agreement-docs?agreementDocsType=UserAgreement',
+            openType: 'navigate',
         }, {
-            name: '隐私政策', url: PRIVACY_POLICY_URL, openType: '',
+            name: '隐私政策', url: '/pages/about/privacy-about/privacy-about', openType: 'navigate',
         }], isLogining: false, soterHelpPopupVisible: false,
     }, async onLoad() {
         this.storeBindings = createStoreBindings(this, {

@@ -1,0 +1,14 @@
+<!--pages/subpages/agreement-docs/agreement-docs.wxml-->
+<wxs module="utils" src="../../../utils/CommonUtil.wxs"></wxs>
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="title" slot="left">{{agreementDocsTypeName}}</view>
+</t-navbar>
+
+<scroll-view class="block" enhanced scroll-x scroll-y style="height:{{scrollHeightPx-44+safeAreaBottomPx}}px;"
+             type="list">
+    <view class="p-32rpx">
+        <rich-text class="break-words whitespace-pre-wrap;" nodes="{{agreementDocsText}}" user-select="{{false}}"/>
+    </view>
+    <view style="height: {{safeAreaBottomPx}}px"></view>
+</scroll-view>

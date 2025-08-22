@@ -1,0 +1,12 @@
+{
+  "component": true,
+  "disableScroll": true,
+  "styleIsolation": "apply-shared",
+  "usingComponents": {
+    "error-popup": "/components/error-popup/error-popup",
+    "t-cell": "tdesign-miniprogram/cell/cell",
+    "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-result": "tdesign-miniprogram/result/result"
+  }
+}

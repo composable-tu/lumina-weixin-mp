@@ -33,6 +33,7 @@
   "scripts": {
     "unocss": "unocss miniprogram/components/**/*.wxml miniprogram/custom-tab-bar/**/*.wxml miniprogram/pages/**/*.wxml !miniprogram/pages/**/node_modules/** !miniprogram/pages/**/miniprogram_npm/** -c uno.config.js --watch -o ./miniprogram/unocss.wxss",
     "unocss:build": "unocss miniprogram/components/**/*.wxml miniprogram/custom-tab-bar/**/*.wxml miniprogram/pages/**/*.wxml !miniprogram/pages/**/node_modules/** !miniprogram/pages/**/miniprogram_npm/** -c uno.config.js -o ./miniprogram/unocss.wxss",
-    "build-oss-licenses-dist": "node OSSLicensesBuilder.js"
+    "build-oss-licenses-dist": "node OSSLicensesBuilder.js",
+    "build-agreement-docs-dist": "node AgreementDocsBuilder.js"
   }
 }

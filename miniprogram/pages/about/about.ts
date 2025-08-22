@@ -2,7 +2,7 @@
 
 // @ts-ignore
 import {copyUtil} from "../../utils/CommonUtil";
-import {ICP_ID, MINI_PROGRAM_NAME, ORGANIZATION_NAME, PRIVACY_POLICY_URL, USER_AGREEMENT_URL} from '../../env';
+import {ICP_ID, MINI_PROGRAM_NAME, ORGANIZATION_NAME} from '../../env';
 import Message from 'tdesign-miniprogram/message/index';
 
 const app = getApp();
@@ -12,9 +12,11 @@ const util = require("../../utils/CommonUtil");
 Page({
     data: {
         footerLink: [{
-            name: '用户协议', url: USER_AGREEMENT_URL, openType: '',
+            name: '用户协议',
+            url: '/pages/subpages/agreement-docs/agreement-docs?agreementDocsType=UserAgreement',
+            openType: 'navigate',
         }, {
-            name: '隐私政策', url: PRIVACY_POLICY_URL, openType: '',
+            name: '隐私政策', url: '/pages/about/privacy-about/privacy-about', openType: 'navigate',
         }], envInfoData: ''
     }, touchNum: 0, onLoad() {
         const accountInfo = wx.getAccountInfoSync();
