@@ -14,6 +14,10 @@ import {groupStoreUtil, isJoinedAnyGroup} from "../../../utils/store-utils/Group
 import {userInfoStoreUtil} from "../../../utils/store-utils/UserInfoUtil";
 import {checkIsSoterEnrolledInDevice, checkIsSupportSoter, luminaStartSoter} from "../../../utils/security/SoterUtil";
 import {LUMINA_SERVER_HOST} from "../../../env";
+import {
+    agreementBadgeStoreUtil,
+    cleanAgreementDocsVersionsStorage
+} from "../../../utils/store-utils/AgreementBadgeStoreUtil";
 
 interface IData {
     EMPTY_JWT: string
@@ -40,8 +44,8 @@ Page<IData, StoreInstance & IMethods>({
     }, async onLoad() {
         this.storeBindings = createStoreBindings(this, {
             store,
-            fields: ["isHideMore7DayEnabled", ...loginStoreUtil.storeBinding.fields, ...groupStoreUtil.storeBinding.fields, ...userInfoStoreUtil.storeBinding.fields],
-            actions: ["setIsHideMore7DayEnabled", "getIsHideMore7DayEnabled", ...loginStoreUtil.storeBinding.actions, ...groupStoreUtil.storeBinding.actions, ...userInfoStoreUtil.storeBinding.actions]
+            fields: ["isHideMore7DayEnabled", ...loginStoreUtil.storeBinding.fields, ...groupStoreUtil.storeBinding.fields, ...userInfoStoreUtil.storeBinding.fields, ...agreementBadgeStoreUtil.storeBinding.fields],
+            actions: ["setIsHideMore7DayEnabled", "getIsHideMore7DayEnabled", ...loginStoreUtil.storeBinding.actions, ...groupStoreUtil.storeBinding.actions, ...userInfoStoreUtil.storeBinding.actions, ...agreementBadgeStoreUtil.storeBinding.actions]
         });
         let isSupportSoter = false
         try {
@@ -76,6 +80,7 @@ Page<IData, StoreInstance & IMethods>({
         if (this.storeBindings) this.storeBindings.destroyStoreBindings();
     }, async logout() {
         await luminaLogout(this)
+        cleanAgreementDocsVersionsStorage(this)
         wx.navigateBack()
     }, errorVisibleChange(e: WechatMiniprogram.CustomEvent) {
         this.setData({
@@ -122,7 +127,7 @@ Page<IData, StoreInstance & IMethods>({
     }
 })
 
-async function startSwitchSoter(that: WechatMiniprogram.Page.Instance<IData,StoreInstance>, actionBoolean: boolean) {
+async function startSwitchSoter(that: WechatMiniprogram.Page.Instance<IData, StoreInstance>, actionBoolean: boolean) {
     that.setData({
         isSoterLoading: true
     })

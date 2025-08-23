@@ -5,6 +5,10 @@ import {store, StoreInstance} from "../../utils/MobX";
 import {ICP_ID} from "../../env";
 import {checkIsSupportSoter} from "../../utils/security/SoterUtil";
 import {getErrorMessage} from "../../utils/CommonUtil";
+import {
+    agreementBadgeStoreUtil,
+    setNowAgreementDocsVersionsStorage
+} from "../../utils/store-utils/AgreementBadgeStoreUtil";
 
 const util = require("../../utils/CommonUtil");
 
@@ -32,7 +36,9 @@ Page<IData, StoreInstance>({
         }], isLogining: false, soterHelpPopupVisible: false,
     }, async onLoad() {
         this.storeBindings = createStoreBindings(this, {
-            store, fields: [...loginStoreUtil.storeBinding.fields], actions: [...loginStoreUtil.storeBinding.actions]
+            store,
+            fields: [...loginStoreUtil.storeBinding.fields, ...agreementBadgeStoreUtil.storeBinding.fields],
+            actions: [...loginStoreUtil.storeBinding.actions, ...agreementBadgeStoreUtil.storeBinding.actions]
         });
         let isSupportSoter = false
         try {
@@ -57,6 +63,7 @@ Page<IData, StoreInstance>({
                 isLogining: true,
             })
             await luminaLogin(this);
+            setNowAgreementDocsVersionsStorage(this)
             wx.navigateBack()
         } catch (e: any) {
             this.setData({

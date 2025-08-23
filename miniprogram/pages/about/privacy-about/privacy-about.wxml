@@ -9,11 +9,17 @@
 
     <view class="pt-32rpx">
         <t-cell-group theme="card">
-            <t-cell arrow bind:click="onClickPrivacyPolicy" bordered hover title="隐私政策"/>
-            <t-cell arrow bind:click="onClickPersonalInformationCollectionList" bordered hover
-                    title="个人信息收集清单"/>
-            <t-cell arrow bind:click="onClickThirdPartyPersonalInformationSharingList" bordered="{{false}}" hover
-                    title="第三方个人信息共享清单"/>
+            <t-cell arrow bind:click="onClickPrivacyPolicy" hover left-icon="certificate-1" title="隐私政策正文">
+                <t-badge dot slot="note" wx:if="{{isShowPrivacyPolicyBadge}}"/>
+            </t-cell>
+            <t-cell arrow bind:click="onClickPersonalInformationCollectionList" hover left-icon="personal-information"
+                    title="个人信息收集清单">
+                <t-badge dot slot="note" wx:if="{{isShowPersonalInformationCollectionListBadge}}"/>
+            </t-cell>
+            <t-cell arrow bind:click="onClickThirdPartyPersonalInformationSharingList" hover
+                    left-icon="system-components" title="第三方个人信息共享清单">
+                <t-badge dot slot="note" wx:if="{{isShowThirdPartyPersonalInformationSharingListBadge}}"/>
+            </t-cell>
         </t-cell-group>
     </view>
 

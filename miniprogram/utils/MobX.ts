@@ -55,6 +55,23 @@ export interface StoreType {
     isHideMore7DayEnabled: boolean;
     setIsHideMore7DayEnabled: (isHideMore7DayEnabled: boolean) => void;
     getIsHideMore7DayEnabled: () => boolean;
+
+    // 法律文本提示红点设置
+    isShowUserAgreementBadge: boolean;
+    setIsShowUserAgreementBadge: (isShowUserAgreementBadge: boolean) => void;
+    getIsShowUserAgreementBadge: () => boolean;
+
+    isShowPrivacyPolicyBadge: boolean;
+    setIsShowPrivacyPolicyBadge: (isShowPrivacyPolicyBadge: boolean) => void;
+    getIsShowPrivacyPolicyBadge: () => boolean;
+
+    isShowPersonalInformationCollectionListBadge: boolean;
+    setIsShowPersonalInformationCollectionListBadge: (isShowPersonalInformationCollectionListBadge: boolean) => void;
+    getIsShowPersonalInformationCollectionListBadge: () => boolean;
+
+    isShowThirdPartyPersonalInformationSharingListBadge: boolean;
+    setIsShowThirdPartyPersonalInformationSharingListBadge: (isShowThirdPartyPersonalInformationSharingListBadge: boolean) => void;
+    getIsShowThirdPartyPersonalInformationSharingListBadge: () => boolean;
 }
 
 export interface StoreInstance extends StoreType {
@@ -146,4 +163,36 @@ export const store = observable({
     getIsHideMore7DayEnabled: action(function () {
         return store.isHideMore7DayEnabled;
     }),
+
+    isShowUserAgreementBadge: false,
+    setIsShowUserAgreementBadge: action(function (isShowUserAgreementBadge: boolean) {
+        store.isShowUserAgreementBadge = isShowUserAgreementBadge;
+    }),
+    getIsShowUserAgreementBadge: action(function () {
+        return store.isShowUserAgreementBadge;
+    }),
+
+    isShowPrivacyPolicyBadge: false,
+    setIsShowPrivacyPolicyBadge: action(function (isShowPrivacyPolicyBadge: boolean) {
+        store.isShowPrivacyPolicyBadge = isShowPrivacyPolicyBadge;
+    }),
+    getIsShowPrivacyPolicyBadge: action(function () {
+        return store.isShowPrivacyPolicyBadge;
+    }),
+
+    isShowPersonalInformationCollectionListBadge: false,
+    setIsShowPersonalInformationCollectionListBadge: action(function (isShowPersonalInformationCollectionListBadge: boolean) {
+        store.isShowPersonalInformationCollectionListBadge = isShowPersonalInformationCollectionListBadge;
+    }),
+    getIsShowPersonalInformationCollectionListBadge: action(function () {
+        return store.isShowPersonalInformationCollectionListBadge;
+    }),
+
+    isShowThirdPartyPersonalInformationSharingListBadge: false,
+    setIsShowThirdPartyPersonalInformationSharingListBadge: action(function (isShowThirdPartyPersonalInformationSharingListBadge: boolean) {
+        store.isShowThirdPartyPersonalInformationSharingListBadge = isShowThirdPartyPersonalInformationSharingListBadge;
+    }),
+    getIsShowThirdPartyPersonalInformationSharingListBadge: action(function () {
+        return store.isShowThirdPartyPersonalInformationSharingListBadge;
+    })
 });
