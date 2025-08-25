@@ -115,5 +115,4 @@
     </view>
 
     <view class="pt-32rpx" style="padding-bottom: {{safeAreaBottomPx}}px;"/>
-
 </t-pull-down-refresh>

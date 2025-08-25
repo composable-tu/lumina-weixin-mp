@@ -45,6 +45,16 @@ Page<IData, StoreInstance>({
                 isRefreshing: false
             })
         }
+    }, onReady() {
+        const scrollHeightPx = util.getHeightPx()
+        this.setData({
+            scrollHeightPx: scrollHeightPx - util.rpx2px(80)
+        })
+    }, onResize() {
+        const scrollHeightPx = util.getHeightPx()
+        this.setData({
+            scrollHeightPx: scrollHeightPx - util.rpx2px(80)
+        })
     }, onUnload() {
         if (this.storeBindings) this.storeBindings.destroyStoreBindings();
     }, errorVisibleChange(e: WechatMiniprogram.CustomEvent) {

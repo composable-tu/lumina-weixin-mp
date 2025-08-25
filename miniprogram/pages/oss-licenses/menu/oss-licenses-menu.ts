@@ -12,13 +12,16 @@ interface IData {
 
 Page<IData, StoreInstance>({
     // @ts-ignore
-    data: {},
-    onLoad() {
+    data: {}, onLoad() {
         this.storeBindings = createStoreBindings(this, {
             store, fields: ['ossLicensesDist'], actions: ['setOSSLicensesDist', 'getOSSLicensesDist']
         });
         if (this.getOSSLicensesDist().length !== 0) this.setOSSLicensesDist(ossLicensesDist)
         this.storeBindings.updateStoreBindings()
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx(),
+        })
+    }, onReady() {
         this.setData({
             scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx(),
         })

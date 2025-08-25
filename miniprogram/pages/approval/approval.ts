@@ -11,7 +11,7 @@ const util = require('../../utils/CommonUtil');
 interface IData {
     EMPTY_JWT: string
     scrollHeightPx: number
-    safeMarginBottomPx: number
+    safeAreaBottomPx: number
     isRefreshing: boolean
     approvalTypeTabValue: string
 }
@@ -29,7 +29,7 @@ Page<IData, StoreInstance>({
         const scrollHeightPx = util.getHeightPx()
         this.setData({
             scrollHeightPx: scrollHeightPx - util.rpx2px(80),
-            safeMarginBottomPx: util.getSafeAreaBottomPx(),
+            safeAreaBottomPx: util.getSafeAreaBottomPx(),
             isRefreshing: true
         })
         this.setIsHideMore7DayEnabled(wx.getStorageSync('isHideMore7DayEnabled') ?? false)
@@ -47,7 +47,17 @@ Page<IData, StoreInstance>({
                 isRefreshing: false
             })
         }
-    }, onUnload() {
+    }, onReady() {
+        const scrollHeightPx = util.getHeightPx()
+        this.setData({
+            scrollHeightPx: scrollHeightPx - util.rpx2px(80), safeAreaBottomPx: util.getSafeAreaBottomPx(),
+        })
+    }, onResize(){
+        const scrollHeightPx = util.getHeightPx()
+        this.setData({
+            scrollHeightPx: scrollHeightPx - util.rpx2px(80), safeAreaBottomPx: util.getSafeAreaBottomPx(),
+        })
+    },onUnload() {
         if (this.storeBindings) this.storeBindings.destroyStoreBindings()
     }, errorVisibleChange(e: WechatMiniprogram.CustomEvent) {
         this.setData({

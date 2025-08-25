@@ -13,9 +13,8 @@ import {
 const util = require("../../utils/CommonUtil");
 
 interface IData {
-    safeMarginBottomPx: number;
-    scrollHeightPx: number;
     safeAreaBottomPx: number;
+    scrollHeightPx: number;
     theme: string;
     icpInfo: string;
     footerLink: {
@@ -47,7 +46,6 @@ Page<IData, StoreInstance>({
             isSupportSoter = false
         }
         this.setData({
-            safeMarginBottomPx: util.getSafeAreaBottomPx(),
             scrollHeightPx: util.getHeightPx(),
             safeAreaBottomPx: util.getSafeAreaBottomPx(),
             theme: wx.getAppBaseInfo().theme || 'light',
@@ -55,6 +53,14 @@ Page<IData, StoreInstance>({
             isSupportSoter: isSupportSoter ?? false,
         })
         await loginStoreUtil.initLoginStore(this)
+    }, onReady() {
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx()
+        })
+    }, onResize() {
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx()
+        })
     }, onUnload() {
         if (this.storeBindings) this.storeBindings.destroyStoreBindings();
     }, async login() {

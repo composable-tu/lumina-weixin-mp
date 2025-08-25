@@ -50,6 +50,10 @@ Page<IData, StoreInstance>({
                 errorMessage: getErrorMessage(e), errorVisible: true
             })
         }
+    }, onReady() {
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx(),
+        })
     }, onResize() {
         this.setData({
             scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx(),

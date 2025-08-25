@@ -9,7 +9,6 @@ import {
     loginStoreUtil,
     luminaLogout
 } from "../../../utils/store-utils/LoginStoreUtil";
-import {ErrorResponse, getErrorMessage, getHeightPx, getSafeAreaBottomPx} from '../../../utils/CommonUtil';
 import {groupStoreUtil, isJoinedAnyGroup} from "../../../utils/store-utils/GroupStoreUtil";
 import {userInfoStoreUtil} from "../../../utils/store-utils/UserInfoUtil";
 import {checkIsSoterEnrolledInDevice, checkIsSupportSoter, luminaStartSoter} from "../../../utils/security/SoterUtil";
@@ -18,6 +17,9 @@ import {
     agreementBadgeStoreUtil,
     cleanAgreementDocsVersionsStorage
 } from "../../../utils/store-utils/AgreementBadgeStoreUtil";
+import {getErrorMessage} from "../../../utils/CommonUtil";
+
+const util = require('../../../utils/CommonUtil');
 
 interface IData {
     EMPTY_JWT: string
@@ -54,8 +56,8 @@ Page<IData, StoreInstance & IMethods>({
             isSupportSoter = false
         }
         this.setData({
-            scrollHeightPx: getHeightPx(),
-            safeAreaBottomPx: getSafeAreaBottomPx(),
+            scrollHeightPx: util.getHeightPx(),
+            safeAreaBottomPx: util.getSafeAreaBottomPx(),
             isLoading: true,
             isSupportSoter: isSupportSoter ?? false,
             isHideMore7DayEnabled: wx.getStorageSync('isHideMore7DayEnabled') ?? false
@@ -76,6 +78,14 @@ Page<IData, StoreInstance & IMethods>({
                 isLoading: false,
             })
         }
+    }, onReady() {
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx(),
+        })
+    }, onResize() {
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx(),
+        })
     }, onUnload() {
         if (this.storeBindings) this.storeBindings.destroyStoreBindings();
     }, async logout() {
