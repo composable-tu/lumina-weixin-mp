@@ -134,7 +134,7 @@
 
 <t-date-time-picker bindcancel="hideEndDateTimePicker" bindchange="onEndDateTimePickerChange"
                     format="YYYY-MM-DDTHH:mm:ss" mode="second" start="{{utils.now()}}" title="结束时间"
-                    value="{{endDateTime}}" visible="{{endDateTimePickerVisible}}"/>
+                    value="{{endDateTime}}" visible="{{endDateTimePickerVisible}}" auto-close/>
 
 <t-popup bind:visible-change="setCheckInSettingPopupVisibleChange" placement="bottom"
          visible="{{setCheckInSettingPopupVisible}}">

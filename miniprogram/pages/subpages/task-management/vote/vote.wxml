@@ -1,0 +1,47 @@
+<!--pages/subpages/task-management/vote/vote.wxml-->
+<wxs module="utils" src="../../../../utils/CommonUtil.wxs"></wxs>
+
+<t-message id="t-message"/>
+
+<error-popup bind:visible-change="errorVisibleChange" message="{{errorMessage}}" visible="{{errorVisible}}"/>
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="title" slot="left">任务参与数据</view>
+</t-navbar>
+
+<t-pull-down-refresh bind:refresh="onRefresh" enable-passive enhanced
+                     loadingTexts="{{['下拉刷新', '松手刷新', '', '加载完成']}}" scroll-with-animation
+                     scroll-y="{{true}}" show-scrollbar="{{false}}"
+                     style="height: {{scrollHeightPx-44+safeAreaBottomPx}}px;" usingCustomNavbar
+                     value="{{isRefreshing}}">
+    <view class="pt-96rpx mx-32rpx" wx:if="{{!isRefreshing&&!utils.isLogin(jwt)}}">
+        <t-result theme="default" title="尚未登录"/>
+        <t-button bind:tap="login" block class="mt-32rpx" size="large" theme="primary">登录</t-button>
+    </view>
+
+    <view class="py-16rpx">
+        <view class="py-16rpx"
+              wx:for="{{selectedTask.voteTaskOptions}}" wx:key="userId">
+            <t-cell-group theme="card">
+                <t-cell arrow bind:click="onOptionItemClick" data-user-id="{{item.optionName}}" hover
+                        title="{{item.optionName+((item.voteParticipants.length)?'（'+item.voteParticipants.length+' 人选择）':'')}}">
+                    <view slot="description">
+                        {{item.optionDescription}}
+                        <t-progress percentage="{{utils.toFixed2(item.voteParticipants.length*100/participantCount)}}"
+                                    style="margin-top: 12rpx;font-family: TCloudNumber, sans-serif;"
+                                    theme="plump"/>
+                    </view>
+                </t-cell>
+            </t-cell-group>
+        </view>
+        <view class="py-16rpx">
+            <t-cell-group theme="card">
+                <t-cell arrow bind:click="onNonParticipantsItemClick" hover
+                        note="{{(selectedTask.voteNonParticipants.length?selectedTask.voteNonParticipants.length:0)+' 人'}}"
+                        title="未参与者"/>
+            </t-cell-group>
+        </view>
+    </view>
+
+    <view style="padding-bottom: {{safeAreaBottomPx}}px;"/>
+</t-pull-down-refresh>

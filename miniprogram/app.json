@@ -20,7 +20,8 @@
     "pages/index/selected-task/vote/vote",
     "pages/subpages/task-management/check-in/check-in",
     "pages/subpages/agreement-docs/agreement-docs",
-    "pages/about/privacy-about/privacy-about"
+    "pages/about/privacy-about/privacy-about",
+    "pages/subpages/task-management/vote/vote"
   ],
   "tabBar": {
     "custom": true,

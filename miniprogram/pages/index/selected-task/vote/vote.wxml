@@ -114,5 +114,11 @@
         </t-button>
     </view>
 
+    <view class="pt-32rpx mx-32rpx flex"
+          wx:if="{{utils.isLogin(jwt)&&!isSelectedNotFound&&selectedTask&&isTaskCreator}}">
+        <t-button bind:tap="seeTaskParticipationData" block size="large" theme="light" variant="outline">任务参与数据
+        </t-button>
+    </view>
+
     <view class="pt-32rpx" style="padding-bottom: {{safeAreaBottomPx}}px;"/>
 </t-pull-down-refresh>

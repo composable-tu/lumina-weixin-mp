@@ -182,6 +182,10 @@ Page<IData, StoreInstance>({
                 isVoteRecalling: false
             });
         }
+    }, seeTaskParticipationData() {
+        wx.navigateTo({
+            url: '/pages/subpages/task-management/vote/vote?selectedTaskId=' + this.data.selectedTaskId
+        });
     }
 })
 
