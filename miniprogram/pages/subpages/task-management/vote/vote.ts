@@ -36,9 +36,7 @@ Page<IData, StoreInstance>({
             actions: [...loginStoreUtil.storeBinding.actions, ...userInfoStoreUtil.storeBinding.actions, ...groupStoreUtil.storeBinding.actions, ...taskStoreUtil.storeBinding.actions]
         });
         this.setData({
-            scrollHeightPx: util.getHeightPx(),
-            safeAreaBottomPx: util.getSafeAreaBottomPx(),
-            isRefreshing: true
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx(), isRefreshing: true
         })
         try {
             await loginStoreUtil.initLoginStore(this)
@@ -101,7 +99,33 @@ Page<IData, StoreInstance>({
                 isRefreshing: false
             });
         }
-    },
+    }, onOptionsSelectedUserChange(e: WechatMiniprogram.CustomEvent) {
+        this.setData({
+            optionsSelectedUserVisible: e.detail.visible
+        })
+    }, closeOptionsSelectedUser() {
+        this.setData({
+            optionsSelectedUserVisible: false
+        })
+    }, onNonParticipantsItemClick() {
+        this.setData({
+            isClickedNonParticipant: true,
+            optionsSelectedUserVisible: true,
+            clickedUserList: this.data.selectedTask?.voteNonParticipants || []
+        })
+    }, onOptionItemClick(e: WechatMiniprogram.CustomEvent) {
+        const clickedOptionName = e.currentTarget.dataset.optionName
+        if (clickedOptionName) {
+            const clickedOption = this.data.selectedTask?.voteTaskOptions.find(option => option.optionName === clickedOptionName) ?? null
+            this.setData({
+                isClickedNonParticipant: false,
+                optionsSelectedUserVisible: true,
+                clickedOptionName: clickedOptionName,
+                clickedUserList: clickedOption?.voteParticipants ?? [],
+                clickedOptionDescription: clickedOption?.optionDescription ?? undefined
+            })
+        }
+    }
 })
 
 async function getSelectedVoteTaskManagerInfo(that: WechatMiniprogram.Page.Instance<IData, StoreInstance>, selectedTaskId: string) {

@@ -23,7 +23,7 @@
         <view class="py-16rpx"
               wx:for="{{selectedTask.voteTaskOptions}}" wx:key="userId">
             <t-cell-group theme="card">
-                <t-cell arrow bind:click="onOptionItemClick" data-user-id="{{item.optionName}}" hover
+                <t-cell arrow bind:click="onOptionItemClick" data-option-name="{{item.optionName}}" hover
                         title="{{item.optionName+((item.voteParticipants.length)?'（'+item.voteParticipants.length+' 人选择）':'')}}">
                     <view slot="description">
                         {{item.optionDescription}}
@@ -38,10 +38,52 @@
             <t-cell-group theme="card">
                 <t-cell arrow bind:click="onNonParticipantsItemClick" hover
                         note="{{(selectedTask.voteNonParticipants.length?selectedTask.voteNonParticipants.length:0)+' 人'}}"
-                        title="未参与者"/>
+                        title="尚未参与者"/>
             </t-cell-group>
         </view>
     </view>
 
     <view style="padding-bottom: {{safeAreaBottomPx}}px;"/>
 </t-pull-down-refresh>
+
+<t-popup bind:visible-change="onOptionsSelectedUserChange" close-on-overlay-click="{{false}}" placement="bottom"
+         visible="{{optionsSelectedUserVisible}}">
+    <view class="block">
+        <view class="flex items-center h-116rpx">
+            <view class="flex-1 text-center font-600 text-36rpx">{{isClickedNonParticipant ? '尚未参与者' : '选项详情'}}</view>
+        </view>
+        <scroll-view enable-passive enhanced scroll-with-animation scroll-y="{{true}}" show-scrollbar
+                     style="height: 40vh;">
+            <t-cell-group>
+                <t-cell hover
+                        title="{{clickedOptionName+((clickedVoteParticipants.length)?'（'+clickedVoteParticipants.length+' 人选择）':'')}}"
+                        wx:if="{{!isClickedNonParticipant}}">
+                    <view slot="description">
+                        {{clickedOptionDescription}}
+                        <t-progress percentage="{{utils.toFixed2(clickedVoteParticipants.length*100/participantCount)}}"
+                                    style="margin-top: 12rpx;font-family: TCloudNumber, sans-serif;"
+                                    theme="plump"/>
+                    </view>
+                </t-cell>
+                <t-cell description="{{item.votedAt?utils.formatTime(item.votedAt):''}}" hover
+                        wx:for="{{clickedUserList}}">
+                    <view slot="title">
+                        <view class="mr-16rpx inline">{{item.userName ? item.userName : item.userId}}</view>
+                        <t-tag class="inline-block vertical-bottom" theme="default" variant="light"
+                               wx:if="{{item.userId!==''}}">
+                            {{item.userId}}
+                        </t-tag>
+                    </view>
+                </t-cell>
+            </t-cell-group>
+            <view class="pt-96rpx mx-32rpx" wx:if="{{clickedUserList.length===0}}">
+                <t-result theme="default"
+                          title="{{isClickedNonParticipant?'尚无任何用户未参与':'尚无任何用户选中此项'}}"/>
+            </view>
+        </scroll-view>
+        <view class="mt-32rpx mx-32rpx mb-32rpx flex">
+            <t-button bind:tap="closeOptionsSelectedUser" block size="large" theme="light">返回
+            </t-button>
+        </view>
+    </view>
+</t-popup>
