@@ -2,7 +2,7 @@
 
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {store, StoreInstance} from "../../utils/MobX";
-import {EMPTY_JWT, isLogin, loginStoreUtil} from "../../utils/store-utils/LoginStoreUtil";
+import {EMPTY_JWT, loginStoreUtil} from "../../utils/store-utils/LoginStoreUtil";
 import {getErrorMessage} from "../../utils/CommonUtil";
 import {approvalStoreUtil} from "../../utils/store-utils/ApprovalStoreUtil";
 
@@ -35,9 +35,7 @@ Page<IData, StoreInstance>({
         this.setIsHideMore7DayEnabled(wx.getStorageSync('isHideMore7DayEnabled') ?? false)
         try {
             await loginStoreUtil.initLoginStore(this)
-            if (isLogin(this.getJWT())) {
-                await approvalStoreUtil.checkApprovalStatus(this)
-            }
+            await approvalStoreUtil.checkApprovalStatus(this)
         } catch (e: any) {
             this.setData({
                 errorMessage: getErrorMessage(e), errorVisible: true
@@ -52,13 +50,15 @@ Page<IData, StoreInstance>({
         this.setData({
             scrollHeightPx: scrollHeightPx - util.rpx2px(80), safeAreaBottomPx: util.getSafeAreaBottomPx(),
         })
-    }, onResize(){
+    }, onResize() {
         const scrollHeightPx = util.getHeightPx()
         this.setData({
             scrollHeightPx: scrollHeightPx - util.rpx2px(80), safeAreaBottomPx: util.getSafeAreaBottomPx(),
         })
-    },onUnload() {
+    }, onUnload() {
         if (this.storeBindings) this.storeBindings.destroyStoreBindings()
+    }, async onShow(){
+        await this.onRefresh()
     }, errorVisibleChange(e: WechatMiniprogram.CustomEvent) {
         this.setData({
             errorVisible: e.detail.visible
@@ -73,9 +73,7 @@ Page<IData, StoreInstance>({
         });
         try {
             await loginStoreUtil.initLoginStore(this)
-            if (isLogin(this.getJWT())) {
-                await approvalStoreUtil.checkApprovalStatus(this)
-            }
+            await approvalStoreUtil.checkApprovalStatus(this)
         } catch (e: any) {
             this.setData({
                 errorMessage: getErrorMessage(e), errorVisible: true

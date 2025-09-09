@@ -5,7 +5,7 @@ import {ErrorResponse} from "../CommonUtil";
 export const groupStoreUtil = {
     checkGroupStatus: async function (that: WechatMiniprogram.Page.TrivialInstance | WechatMiniprogram.Component.TrivialInstance) {
         const jwt = that.getJWT();
-        if (isLogin(jwt)) await getGroupList(that, that.getJWT())
+        if (isLogin(jwt)) await getGroupList(that, jwt); else that.setGroupInfo([])
     }, storeBinding: {
         fields: ['groupInfo'], actions: ['setGroupInfo', 'getGroupInfo']
     }

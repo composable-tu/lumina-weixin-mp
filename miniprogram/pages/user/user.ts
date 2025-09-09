@@ -57,6 +57,8 @@ Page<IData, StoreInstance>({
         })
     }, onUnload() {
         if (this.storeBindings) this.storeBindings.destroyStoreBindings();
+    }, async onShow(){
+        await this.onRefresh()
     }, errorVisibleChange(e: WechatMiniprogram.CustomEvent) {
         this.setData({
             errorVisible: e.detail.visible

@@ -1,9 +1,11 @@
 import {LUMINA_SERVER_HOST} from "../../env";
 import {ErrorResponse} from "../CommonUtil";
+import {isLogin} from "./LoginStoreUtil";
 
 export const taskStoreUtil = {
     checkTaskStatus: async function (that: WechatMiniprogram.Page.TrivialInstance | WechatMiniprogram.Component.TrivialInstance) {
-        await getTaskList(that, that.getJWT());
+        const jwt = that.getJWT();
+        if (isLogin(jwt)) await getTaskList(that, jwt); else that.setTaskInfo([]);
     }, storeBinding: {
         fields: ['taskInfo'], actions: ['setTaskInfo', 'getTaskInfo']
     }

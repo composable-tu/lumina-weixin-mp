@@ -4,7 +4,7 @@ import {isLogin} from "./LoginStoreUtil";
 export const userInfoStoreUtil = {
     checkUserInfoStatus: async function (that: WechatMiniprogram.Page.TrivialInstance | WechatMiniprogram.Component.TrivialInstance) {
         const jwt = that.getJWT();
-        if (isLogin(jwt)) await getUserInfo(that, that.getJWT())
+        if (isLogin(jwt)) await getUserInfo(that, jwt);
     }, storeBinding: {
         fields: ['userInfo'], actions: ['setUserInfo', 'getUserInfo']
     }
