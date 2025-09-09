@@ -45,7 +45,7 @@ Page<IData, StoreInstance>({
                 await userInfoStoreUtil.checkUserInfoStatus(this)
                 await groupStoreUtil.checkGroupStatus(this)
                 await getIsUserSoterEnabled(this)
-                const selectedTaskId = options.selectedTaskId;
+                const {selectedTaskId} = options;
                 if (isNullOrEmptyOrUndefined(selectedTaskId)) this.setData({
                     isSelectedNotFound: true
                 }); else if (selectedTaskId) await getSelectedVoteTaskManagerInfo(this, selectedTaskId)
