@@ -112,7 +112,11 @@
 <t-picker bindcancel="onTaskTypePickerCancel" bindchange="onTaskTypePickerChange" cancelBtn="取消" confirmBtn="确认"
           title="任务类型" value="{{[selectedTaskType.value]}}" visible="{{taskTypePickerVisible}}">
     <t-picker-item options="{{TaskTypeOptions}}">
-        <block wx:for="{{TaskTypeOptions}}" wx:key="value"/>
+        <block wx:for="{{TaskTypeOptions}}" wx:key="value">
+            <view class="flex items-center justify-center ml-12rpx" slot="label-suffix--{{index}}" wx:if="{{item.tag}}">
+                <t-tag theme="default">{{item.tag}}</t-tag>
+            </view>
+        </block>
     </t-picker-item>
 </t-picker>
 
@@ -129,8 +133,8 @@
 </t-picker>
 
 <t-date-time-picker bindcancel="hideEndDateTimePicker" bindchange="onEndDateTimePickerChange"
-                    format="YYYY-MM-DDTHH:mm:ss" mode="second" title="结束时间" value="{{endDateTime}}"
-                    visible="{{endDateTimePickerVisible}}"/>
+                    format="YYYY-MM-DDTHH:mm:ss" mode="second" start="{{utils.now()}}" title="结束时间"
+                    value="{{endDateTime}}" visible="{{endDateTimePickerVisible}}" auto-close/>
 
 <t-popup bind:visible-change="setCheckInSettingPopupVisibleChange" placement="bottom"
          visible="{{setCheckInSettingPopupVisible}}">

@@ -5,7 +5,10 @@ import {ErrorResponse, GROUP_JOIN, TASK_CREATION, TASK_EXPAND_GROUP} from "../Co
 export const approvalStoreUtil = {
     checkApprovalStatus: async function (that: WechatMiniprogram.Page.TrivialInstance | WechatMiniprogram.Component.TrivialInstance) {
         const jwt = that.getJWT();
-        if (isLogin(jwt)) await getApprovalInfo(that, that.getJWT())
+        if (isLogin(jwt)) await getApprovalInfo(that, jwt); else {
+            that.setApprovalInfo([]);
+            that.setSelfApprovalInfo([]);
+        }
     }, storeBinding: {
         fields: ['approvalInfo', 'selfApprovalInfo'],
         actions: ['setApprovalInfo', 'getApprovalInfo', 'setSelfApprovalInfo', 'getSelfApprovalInfo']

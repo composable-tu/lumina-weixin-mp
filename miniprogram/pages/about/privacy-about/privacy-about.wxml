@@ -1,0 +1,27 @@
+<!--pages/about/privacy-about/privacy-about.wxml-->
+
+<t-navbar left-arrow t-class-content="t-navbar-content" t-class-placeholder="t-navbar-placeholder">
+    <view class="title" slot="left">隐私政策</view>
+</t-navbar>
+
+<scroll-view enable-passive enhanced scroll-with-animation scroll-y="{{true}}" show-scrollbar="{{false}}"
+             style="height: {{scrollHeightPx-44+safeAreaBottomPx}}px;" type="list">
+
+    <view class="pt-32rpx">
+        <t-cell-group theme="card">
+            <t-cell arrow bind:click="onClickPrivacyPolicy" hover left-icon="certificate-1" title="隐私政策正文">
+                <t-badge dot slot="note" wx:if="{{isShowPrivacyPolicyBadge}}"/>
+            </t-cell>
+            <t-cell arrow bind:click="onClickPersonalInformationCollectionList" hover left-icon="personal-information"
+                    title="个人信息收集清单">
+                <t-badge dot slot="note" wx:if="{{isShowPersonalInformationCollectionListBadge}}"/>
+            </t-cell>
+            <t-cell arrow bind:click="onClickThirdPartyPersonalInformationSharingList" hover
+                    left-icon="system-components" title="第三方个人信息共享清单">
+                <t-badge dot slot="note" wx:if="{{isShowThirdPartyPersonalInformationSharingListBadge}}"/>
+            </t-cell>
+        </t-cell-group>
+    </view>
+
+    <view style="height: {{safeAreaBottomPx}}px"></view>
+</scroll-view>

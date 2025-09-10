@@ -1,3 +1,5 @@
+import {OPEN_WE_ANALYSIS} from "../env";
+
 export const formatTime = (date: Date) => {
     const year = date.getFullYear()
     const month = date.getMonth() + 1
@@ -103,6 +105,7 @@ export interface ErrorResponse {
 }
 
 export const getErrorMessage = (e: any): string => {
+    if (OPEN_WE_ANALYSIS) wx.reportEvent("common_event", e) // 错误上报给 We 分析
     if (e.message) return e.message; else if (e.errMsg) return e.errMsg; else return e.toString()
 }
 

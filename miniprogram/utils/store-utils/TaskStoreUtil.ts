@@ -1,9 +1,11 @@
 import {LUMINA_SERVER_HOST} from "../../env";
 import {ErrorResponse} from "../CommonUtil";
+import {isLogin} from "./LoginStoreUtil";
 
 export const taskStoreUtil = {
     checkTaskStatus: async function (that: WechatMiniprogram.Page.TrivialInstance | WechatMiniprogram.Component.TrivialInstance) {
-        await getTaskList(that, that.getJWT());
+        const jwt = that.getJWT();
+        if (isLogin(jwt)) await getTaskList(that, jwt); else that.setTaskInfo([]);
     }, storeBinding: {
         fields: ['taskInfo'], actions: ['setTaskInfo', 'getTaskInfo']
     }
@@ -128,3 +130,11 @@ export const BLACKLIST = "BLACKLIST"
 
 export const TOKEN_CHECK_IN = "TOKEN"
 export const ORDINARY_CHECK_IN = "ORDINARY"
+
+export const PENDING = "PENDING"
+export const PARTICIPATED = "PARTICIPATED"
+export const NOT_REQUIRED = "NOT_REQUIRED"
+export const EXPIRED = "EXPIRED"
+export const MARK_AS_PARTICIPANT = "MARK_AS_PARTICIPANT"
+export const MARK_AS_NOT_PARTICIPANT = "MARK_AS_NOT_PARTICIPANT"
+export const MARK_AS_PENDING = "MARK_AS_PENDING"

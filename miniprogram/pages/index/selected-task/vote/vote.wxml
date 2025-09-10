@@ -83,11 +83,12 @@
                               value="{{selectedVoteOptionsCache}}">
                 <t-checkbox icon="rectangle"
                             label="{{item.optionName+((item.voteCount&&utils.isVoteResultShow(selectedTask.status,selectedTask.isVoteResultPublic))?'（'+item.voteCount+' 人选择）':'')}}"
-                            value="{{item.optionName}}" wx:for="{{selectedTask.voteTaskOptions}}">
+                            value="{{item.optionName}}" wx:for="{{selectedTask.voteTaskOptions}}" wx:key="optionName">
                     <view slot="content">
                         {{item.optionDescription}}
                         <t-progress percentage="{{utils.toFixed2(item.voteCount*100/participantCount)}}"
-                                    style="margin-top: {{item.optionDescription?'12':'4'}}rpx" theme="plump"
+                                    style="margin-top: {{item.optionDescription?'12':'4'}}rpx;font-family: TCloudNumber, sans-serif;"
+                                    theme="plump"
                                     wx:if="{{utils.isVoteResultShow(selectedTask.status,selectedTask.isVoteResultPublic)}}"/>
                     </view>
                 </t-checkbox>
@@ -113,6 +114,11 @@
         </t-button>
     </view>
 
-    <view class="pt-32rpx" style="padding-bottom: {{safeAreaBottomPx}}px;"/>
+    <view class="pt-32rpx mx-32rpx flex"
+          wx:if="{{utils.isLogin(jwt)&&!isSelectedNotFound&&selectedTask&&isTaskCreator}}">
+        <t-button bind:tap="seeTaskParticipationData" block size="large" theme="light" variant="outline">任务参与数据
+        </t-button>
+    </view>
 
+    <view class="pt-32rpx" style="padding-bottom: {{safeAreaBottomPx}}px;"/>
 </t-pull-down-refresh>

@@ -19,6 +19,7 @@ interface IData {
     selectedTaskId: string
     selectedTask: CheckInTaskInfo,
     isGroupAdmin: boolean
+    isTaskCreator: boolean
     countDownTime: number
     checkInTokenValue: string
 }
@@ -33,10 +34,7 @@ Page<IData, StoreInstance>({
             actions: [...loginStoreUtil.storeBinding.actions, ...userInfoStoreUtil.storeBinding.actions, ...groupStoreUtil.storeBinding.actions, ...taskStoreUtil.storeBinding.actions]
         });
         this.setData({
-            safeMarginBottomPx: util.getSafeAreaBottomPx(),
-            scrollHeightPx: util.getHeightPx(),
-            safeAreaBottomPx: util.getSafeAreaBottomPx(),
-            isRefreshing: true
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx(), isRefreshing: true
         })
         try {
             await loginStoreUtil.initLoginStore(this)
@@ -59,6 +57,14 @@ Page<IData, StoreInstance>({
                 isRefreshing: false
             })
         }
+    }, onReady() {
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx()
+        })
+    }, onResize() {
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx()
+        })
     }, onUnload() {
         if (this.storeBindings) this.storeBindings.destroyStoreBindings();
     }, errorVisibleChange(e: WechatMiniprogram.CustomEvent) {
@@ -122,6 +128,10 @@ Page<IData, StoreInstance>({
                 isCheckInStarting: false
             });
         }
+    }, seeTaskParticipationData() {
+        wx.navigateTo({
+            url: '/pages/subpages/task-management/check-in/check-in?selectedTaskId=' + this.data.selectedTaskId
+        });
     }
 })
 
@@ -137,6 +147,7 @@ async function getSelectedCheckInTaskInfo(that: WechatMiniprogram.Page.Instance<
             selectedTask: selectCheckInTaskInfo,
             countDownTime: countDownTime,
             isGroupAdmin: that.getGroupInfo().length !== 0 ? util.isAdminAndSuperAdmin(targetGroupInfo.permission) : false,
+            isTaskCreator: that.getUserInfo().userId === selectCheckInTaskInfo.creatorId,
         })
     }
 }

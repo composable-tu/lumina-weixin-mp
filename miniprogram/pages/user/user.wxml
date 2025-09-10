@@ -37,7 +37,10 @@
         <t-cell-group theme="card">
             <t-cell arrow bind:click="clickGroupManagement" bordered hover leftIcon="user-setting" title="团体管理"/>
             <t-cell arrow bind:click="clickSetting" bordered hover leftIcon="setting" title="设置"/>
-            <t-cell arrow bind:click="clickAbout" bordered="{{false}}" hover leftIcon="info-circle" title="关于"/>
+            <t-cell arrow bind:click="clickAbout" bordered="{{false}}" hover leftIcon="info-circle" title="关于">
+                <t-badge dot slot="note"
+                         wx:if="{{isShowUserAgreementBadge||isShowPrivacyPolicyBadge||isShowPersonalInformationCollectionListBadge||isShowThirdPartyPersonalInformationSharingListBadge}}"/>
+            </t-cell>
         </t-cell-group>
     </view>
 </t-pull-down-refresh>

@@ -52,5 +52,7 @@ module.exports = {
         return Math.round(num * 100) / 100;
     }, isVoteResultShow: function (status, isVoteResultPublic) {
         return (status === 'PARTICIPATED' || status === 'EXPIRED') && isVoteResultPublic
-    }
+    }, now: function () {
+        return Date.now();
+    },
 };

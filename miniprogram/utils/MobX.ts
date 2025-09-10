@@ -1,149 +1,117 @@
-import {action, observable} from 'mobx-miniprogram';
-import {EMPTY_JWT} from "./store-utils/LoginStoreUtil";
-import {ApprovalInfo} from "./store-utils/ApprovalStoreUtil";
-import {TaskInfo} from "./store-utils/TaskStoreUtil";
-import {GroupInfo} from "./store-utils/GroupStoreUtil";
 import {StoreBindingsManager} from "mobx-miniprogram-bindings/src/core";
+import {loginStore, LoginStoreType} from "./mobx/LoginMobX";
+import {approvalStore, ApprovalStoreType} from "./mobx/ApprovalMobX";
+import {taskStore, TaskStoreType} from "./mobx/TaskMobX";
+import {userStore, UserStoreType} from "./mobx/UserMobX";
+import {ossLicensesStore, OSSLicensesStoreType} from "./mobx/OSSLicensesMobX";
+import {settingStore, SettingStoreType} from "./mobx/SettingMobX";
+import {agreementBadgeStore, AgreementBadgeStoreType} from "./mobx/AgreementBadgeMobX";
+import {observable} from "mobx-miniprogram";
 
-export interface StoreType {
-    // 登录状态相关
-    isLoginStateChecked: boolean;
-    setIsLoginStateChecked: (isLoginStateChecked: boolean) => void;
-    getIsLoginStateChecked: () => boolean;
-
-    // JWT和认证相关
-    jwt: string;
-    isCancellationState: boolean;
-    isSoterEnabled: boolean;
-    setJWT: (jwt: string) => void;
-    getJWT: () => string;
-    setIsCancellationState: (isCancellationState: boolean) => void;
-    getIsCancellationState: () => boolean;
-    setIsSoterEnabled: (isSoterEnabled: boolean) => void;
-    getIsSoterEnabled: () => boolean;
-
-    // 审批信息相关
-    approvalInfo: ApprovalInfo[];
-    selfApprovalInfo: ApprovalInfo[];
-    setApprovalInfo: (approvalInfo: ApprovalInfo[]) => void;
-    getApprovalInfo: () => ApprovalInfo[];
-    setSelfApprovalInfo: (selfApprovalInfo: ApprovalInfo[]) => void;
-    getSelfApprovalInfo: () => ApprovalInfo[];
-
-    // 任务和组相关
-    taskInfo: TaskInfo[];
-    groupInfo: GroupInfo[];
-    setTaskInfo: (taskInfo: TaskInfo[]) => void;
-    getTaskInfo: () => TaskInfo[];
-    setGroupInfo: (groupInfo: GroupInfo[]) => void;
-    getGroupInfo: () => GroupInfo[];
-
-    // 用户信息
-    userInfo: {
-        userId: string;
-        userName: string;
-    };
-    setUserInfo: (userInfo: { userId: string; userName: string }) => void;
-    getUserInfo: () => { userId: string; userName: string };
-
-    // 开源许可证信息
-    ossLicensesDist: any;
-    setOSSLicensesDist: (ossLicensesDist: any) => void;
-    getOSSLicensesDist: () => any;
-
-    // UI设置
-    isHideMore7DayEnabled: boolean;
-    setIsHideMore7DayEnabled: (isHideMore7DayEnabled: boolean) => void;
-    getIsHideMore7DayEnabled: () => boolean;
-}
+type StoreType =
+    LoginStoreType
+    & ApprovalStoreType
+    & TaskStoreType
+    & UserStoreType
+    & OSSLicensesStoreType
+    & SettingStoreType
+    & AgreementBadgeStoreType;
 
 export interface StoreInstance extends StoreType {
     storeBindings?: StoreBindingsManager;
 }
 
-export const store = observable({
-    isLoginStateChecked: false,
-    setIsLoginStateChecked: action(function (isLoginStateChecked: boolean) {
-        store.isLoginStateChecked = isLoginStateChecked;
-    }),
-    getIsLoginStateChecked: action(function () {
-        return store.isLoginStateChecked;
-    }),
-
-    jwt: EMPTY_JWT,
-    isCancellationState: true,
-    isSoterEnabled: false,
-    setJWT: action(function (jwt: string) {
-        store.jwt = jwt;
-    }),
-    getJWT: action(function () {
-        return store.jwt;
-    }),
-    setIsCancellationState: action(function (isCancellationState: boolean) {
-        store.isCancellationState = isCancellationState;
-    }),
-    getIsCancellationState: action(function () {
-        return store.isCancellationState;
-    }),
-    setIsSoterEnabled: action(function (isSoterEnabled: boolean) {
-        store.isSoterEnabled = isSoterEnabled;
-    }),
-    getIsSoterEnabled: action(function () {
-        return store.isSoterEnabled;
-    }),
-
-    approvalInfo: [] as ApprovalInfo[],
-    selfApprovalInfo: [] as ApprovalInfo[],
-    taskInfo: [] as TaskInfo[],
-    groupInfo: [] as GroupInfo[],
-    userInfo: {
-        userId: '',
-        userName: ''
+export const store: StoreType = observable({
+    // Login
+    get isLoginStateChecked() {
+        return loginStore.isLoginStateChecked;
     },
-    setApprovalInfo: action(function (approvalInfo: ApprovalInfo[]) {
-        store.approvalInfo = approvalInfo;
-    }),
-    getApprovalInfo: action(function () {
-        return store.approvalInfo;
-    }),
-    setSelfApprovalInfo: action(function (selfApprovalInfo: ApprovalInfo[]) {
-        store.selfApprovalInfo = selfApprovalInfo;
-    }),
-    getSelfApprovalInfo: action(function () {
-        return store.selfApprovalInfo;
-    }),
-    setTaskInfo: action(function (taskInfo: TaskInfo[]) {
-        store.taskInfo = taskInfo;
-    }),
-    getTaskInfo: action(function () {
-        return store.taskInfo;
-    }),
-    setGroupInfo: action(function (groupInfo: GroupInfo[]) {
-        store.groupInfo = groupInfo;
-    }),
-    getGroupInfo: action(function () {
-        return store.groupInfo;
-    }),
-    setUserInfo: action(function (userInfo: { userId: string; userName: string }) {
-        store.userInfo = userInfo;
-    }),
-    getUserInfo: action(function () {
-        return store.userInfo;
-    }),
+    setIsLoginStateChecked: loginStore.setIsLoginStateChecked,
+    getIsLoginStateChecked: loginStore.getIsLoginStateChecked,
 
-    ossLicensesDist: {} as any,
-    setOSSLicensesDist: action(function (ossLicensesDist: any) {
-        store.ossLicensesDist = ossLicensesDist;
-    }),
-    getOSSLicensesDist: action(function () {
-        return store.ossLicensesDist;
-    }),
+    get jwt() {
+        return loginStore.jwt;
+    },
+    get isCancellationState() {
+        return loginStore.isCancellationState;
+    },
+    get isSoterEnabled() {
+        return loginStore.isSoterEnabled;
+    },
+    setJWT: loginStore.setJWT,
+    getJWT: loginStore.getJWT,
+    setIsCancellationState: loginStore.setIsCancellationState,
+    getIsCancellationState: loginStore.getIsCancellationState,
+    setIsSoterEnabled: loginStore.setIsSoterEnabled,
+    getIsSoterEnabled: loginStore.getIsSoterEnabled,
 
-    isHideMore7DayEnabled: false,
-    setIsHideMore7DayEnabled: action(function (isHideMore7DayEnabled: boolean) {
-        store.isHideMore7DayEnabled = isHideMore7DayEnabled;
-    }),
-    getIsHideMore7DayEnabled: action(function () {
-        return store.isHideMore7DayEnabled;
-    }),
+    // Approval
+    get approvalInfo() {
+        return approvalStore.approvalInfo;
+    },
+    get selfApprovalInfo() {
+        return approvalStore.selfApprovalInfo;
+    },
+    setApprovalInfo: approvalStore.setApprovalInfo,
+    getApprovalInfo: approvalStore.getApprovalInfo,
+    setSelfApprovalInfo: approvalStore.setSelfApprovalInfo,
+    getSelfApprovalInfo: approvalStore.getSelfApprovalInfo,
+
+    // Task
+    get taskInfo() {
+        return taskStore.taskInfo;
+    },
+    get groupInfo() {
+        return taskStore.groupInfo;
+    },
+    setTaskInfo: taskStore.setTaskInfo,
+    getTaskInfo: taskStore.getTaskInfo,
+    setGroupInfo: taskStore.setGroupInfo,
+    getGroupInfo: taskStore.getGroupInfo,
+
+    // User
+    get userInfo() {
+        return userStore.userInfo;
+    },
+    setUserInfo: userStore.setUserInfo,
+    getUserInfo: userStore.getUserInfo,
+
+    // OSS Licenses
+    get ossLicensesDist() {
+        return ossLicensesStore.ossLicensesDist;
+    },
+    setOSSLicensesDist: ossLicensesStore.setOSSLicensesDist,
+    getOSSLicensesDist: ossLicensesStore.getOSSLicensesDist,
+
+    // Setting
+    get isHideMore7DayEnabled() {
+        return settingStore.isHideMore7DayEnabled;
+    },
+    setIsHideMore7DayEnabled: settingStore.setIsHideMore7DayEnabled,
+    getIsHideMore7DayEnabled: settingStore.getIsHideMore7DayEnabled,
+
+    // Agreement Badge
+    get isShowUserAgreementBadge() {
+        return agreementBadgeStore.isShowUserAgreementBadge;
+    },
+    setIsShowUserAgreementBadge: agreementBadgeStore.setIsShowUserAgreementBadge,
+    getIsShowUserAgreementBadge: agreementBadgeStore.getIsShowUserAgreementBadge,
+
+    get isShowPrivacyPolicyBadge() {
+        return agreementBadgeStore.isShowPrivacyPolicyBadge;
+    },
+    setIsShowPrivacyPolicyBadge: agreementBadgeStore.setIsShowPrivacyPolicyBadge,
+    getIsShowPrivacyPolicyBadge: agreementBadgeStore.getIsShowPrivacyPolicyBadge,
+
+    get isShowPersonalInformationCollectionListBadge() {
+        return agreementBadgeStore.isShowPersonalInformationCollectionListBadge;
+    },
+    setIsShowPersonalInformationCollectionListBadge: agreementBadgeStore.setIsShowPersonalInformationCollectionListBadge,
+    getIsShowPersonalInformationCollectionListBadge: agreementBadgeStore.getIsShowPersonalInformationCollectionListBadge,
+
+    get isShowThirdPartyPersonalInformationSharingListBadge() {
+        return agreementBadgeStore.isShowThirdPartyPersonalInformationSharingListBadge;
+    },
+    setIsShowThirdPartyPersonalInformationSharingListBadge: agreementBadgeStore.setIsShowThirdPartyPersonalInformationSharingListBadge,
+    getIsShowThirdPartyPersonalInformationSharingListBadge: agreementBadgeStore.getIsShowThirdPartyPersonalInformationSharingListBadge
 });

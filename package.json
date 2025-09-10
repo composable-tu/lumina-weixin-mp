@@ -1,6 +1,6 @@
 {
   "name": "lumina-weixin-mp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "LuminaPJ Weixin Mini Program",
   "author": {
     "name": "LuminaPJ"
@@ -10,27 +10,30 @@
   },
   "license": "MulanPSL-2.0",
   "dependencies": {
-    "dayjs": "^1.11.13",
+    "dayjs": "^1.11.18",
     "json5": "^2.2.3",
     "jsuri": "^1.3.1",
     "miniprogram-sm-crypto": "^0.3.13",
     "mobx-miniprogram": "^6.12.3",
     "mobx-miniprogram-bindings": "^5.1.1",
-    "tdesign-miniprogram": "^1.10.0"
+    "semver": "^7.7.2",
+    "tdesign-miniprogram": "^1.11.0-beta"
   },
   "devDependencies": {
     "@types/jsuri": "^1.3.35",
-    "@unocss/cli": "^66.4.2",
+    "@unocss/cli": "^66.5.0",
     "license-checker-rseidelsohn": "^4.4.2",
+    "marked": "^16.2.1",
     "miniprogram-api-typings": "^4.1.0",
     "shelljs": "^0.10.0",
     "spdx-license-list": "^6.10.0",
     "uglify-js": "^3.19.3",
-    "unocss": "^66.4.2"
+    "unocss": "^66.5.0"
   },
   "scripts": {
     "unocss": "unocss miniprogram/components/**/*.wxml miniprogram/custom-tab-bar/**/*.wxml miniprogram/pages/**/*.wxml !miniprogram/pages/**/node_modules/** !miniprogram/pages/**/miniprogram_npm/** -c uno.config.js --watch -o ./miniprogram/unocss.wxss",
     "unocss:build": "unocss miniprogram/components/**/*.wxml miniprogram/custom-tab-bar/**/*.wxml miniprogram/pages/**/*.wxml !miniprogram/pages/**/node_modules/** !miniprogram/pages/**/miniprogram_npm/** -c uno.config.js -o ./miniprogram/unocss.wxss",
-    "build-oss-licenses-dist": "node OSSLicensesBuilder.js"
+    "build-oss-licenses-dist": "node OSSLicensesBuilder.js",
+    "build-agreement-docs-dist": "node AgreementDocsBuilder.js"
   }
 }

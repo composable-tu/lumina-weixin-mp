@@ -20,6 +20,7 @@ interface IData {
     selectedTaskId: string
     selectedTask: VoteTaskInfo,
     isGroupAdmin: boolean
+    isTaskCreator: boolean
     countDownTime: number
     selectedVoteOptionsCache: string[]
     participantCount: number
@@ -41,10 +42,7 @@ Page<IData, StoreInstance>({
             actions: [...loginStoreUtil.storeBinding.actions, ...userInfoStoreUtil.storeBinding.actions, ...groupStoreUtil.storeBinding.actions, ...taskStoreUtil.storeBinding.actions]
         });
         this.setData({
-            safeMarginBottomPx: util.getSafeAreaBottomPx(),
-            scrollHeightPx: util.getHeightPx(),
-            safeAreaBottomPx: util.getSafeAreaBottomPx(),
-            isRefreshing: true
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx(), isRefreshing: true
         })
         try {
             await loginStoreUtil.initLoginStore(this)
@@ -67,6 +65,14 @@ Page<IData, StoreInstance>({
                 isRefreshing: false
             })
         }
+    }, onReady() {
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx()
+        })
+    }, onResize() {
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx()
+        })
     }, onUnload() {
         if (this.storeBindings) this.storeBindings.destroyStoreBindings();
     }, errorVisibleChange(e: WechatMiniprogram.CustomEvent) {
@@ -176,6 +182,10 @@ Page<IData, StoreInstance>({
                 isVoteRecalling: false
             });
         }
+    }, seeTaskParticipationData() {
+        wx.navigateTo({
+            url: '/pages/subpages/task-management/vote/vote?selectedTaskId=' + this.data.selectedTaskId
+        });
     }
 })
 
@@ -184,6 +194,7 @@ async function getSelectedVoteTaskInfo(that: WechatMiniprogram.Page.Instance<IDa
     if (selectVoteTaskInfo == null) that.setData({
         errorMessage: "未找到任务", errorVisible: true
     }); else {
+        if (selectVoteTaskInfo.voteTaskOptions) selectVoteTaskInfo.voteTaskOptions.sort((a, b) => a.sortOrder - b.sortOrder);
         const countDownTime = new Date(selectVoteTaskInfo.endTime).getTime() - Date.now()
         const targetGroupInfo: GroupInfo | undefined = that.getGroupInfo().find((groupInfo: GroupInfo) => groupInfo.groupId === selectVoteTaskInfo.groupId)
         const isParticipated = selectVoteTaskInfo.status === "PARTICIPATED"
@@ -195,6 +206,7 @@ async function getSelectedVoteTaskInfo(that: WechatMiniprogram.Page.Instance<IDa
             selectedTask: selectVoteTaskInfo,
             countDownTime: countDownTime,
             isGroupAdmin: that.getGroupInfo().length !== 0 ? util.isAdminAndSuperAdmin(targetGroupInfo.permission) : false,
+            isTaskCreator: that.getUserInfo().userId === selectVoteTaskInfo.creatorId,
             selectedVoteOptionsCache: isParticipated ? usersChoice : [],
             participantCount: isResultPublic ? participantCount : 0,
         })

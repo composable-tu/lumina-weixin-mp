@@ -83,10 +83,15 @@
         <t-button bind:tap="startCheckIn" block
                   disabled="{{(selectedTask.checkInType==='TOKEN'&&!checkInTokenValue)||selectedTask.status!=='PENDING'||isCheckInStarting}}"
                   loading="{{isCheckInStarting}}" size="large"
-                  theme="primary">{{selectedTask.status === 'PENDING' ? ((selectedTask.checkInType === 'TOKEN' && !checkInTokenValue) ? '需在上方填入签到验证码' : '执行签到') : selectedTask.status === 'EXPIRED' ? '签到已结束' : selectedTask.status === 'NOT_REQUIRED' ? '您无需参与' : selectedTask.status === 'PARTICIPATED' ? '已成功签到' : ''}}
+                  theme="primary">{{selectedTask.status === 'MARK_AS_PENDING' ? '被标记为待定' : selectedTask.status === 'MARK_AS_PARTICIPANT' ? '被标记为已参与' : selectedTask.status === 'MARK_AS_NOT_PARTICIPANT' ? '被标记为未参与' : selectedTask.status === 'PENDING' ? ((selectedTask.checkInType === 'TOKEN' && !checkInTokenValue) ? '需在上方填入签到验证码' : '执行签到') : selectedTask.status === 'EXPIRED' ? '签到已结束' : selectedTask.status === 'NOT_REQUIRED' ? '您无需参与' : selectedTask.status === 'PARTICIPATED' ? '已成功签到' : ''}}
+        </t-button>
+    </view>
+
+    <view class="pt-32rpx mx-32rpx flex"
+          wx:if="{{utils.isLogin(jwt)&&!isSelectedNotFound&&selectedTask&&isTaskCreator}}">
+        <t-button bind:tap="seeTaskParticipationData" block size="large" theme="light" variant="outline">任务参与数据
         </t-button>
     </view>
 
     <view class="pt-32rpx" style="padding-bottom: {{safeAreaBottomPx}}px;"/>
-
 </t-pull-down-refresh>

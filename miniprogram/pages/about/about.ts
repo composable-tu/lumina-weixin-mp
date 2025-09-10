@@ -1,22 +1,35 @@
 // pages/about/about.ts
 
 // @ts-ignore
-import {copyUtil} from "../../utils/CommonUtil";
-import {ICP_ID, MINI_PROGRAM_NAME, ORGANIZATION_NAME, PRIVACY_POLICY_URL, USER_AGREEMENT_URL} from '../../env';
+import {copyUtil, getErrorMessage} from "../../utils/CommonUtil";
+import {ICP_ID, MINI_PROGRAM_NAME, ORGANIZATION_NAME} from '../../env';
 import Message from 'tdesign-miniprogram/message/index';
+import {createStoreBindings} from "mobx-miniprogram-bindings";
+import {store, StoreInstance} from "../../utils/MobX";
+import {isLogin, loginStoreUtil} from "../../utils/store-utils/LoginStoreUtil";
+import {agreementBadgeStoreUtil} from "../../utils/store-utils/AgreementBadgeStoreUtil";
 
 const app = getApp();
 const util = require("../../utils/CommonUtil");
 
+interface IData {
+}
 
-Page({
+Page<IData, StoreInstance>({
     data: {
-        footerLink: [{
-            name: '用户协议', url: USER_AGREEMENT_URL, openType: '',
-        }, {
-            name: '隐私政策', url: PRIVACY_POLICY_URL, openType: '',
-        }]
-    }, touchNum: 0, onLoad() {
+        userAgreementLink: {
+            name: '用户协议',
+            url: '/pages/subpages/agreement-docs/agreement-docs?agreementDocsType=UserAgreement',
+            openType: 'navigate',
+        }, privacyAboutLink: {
+            name: '隐私政策', url: '/pages/about/privacy-about/privacy-about', openType: 'navigate',
+        }, envInfoData: ''
+    }, touchNum: 0, async onLoad() {
+        this.storeBindings = createStoreBindings(this, {
+            store,
+            fields: [...loginStoreUtil.storeBinding.fields, ...agreementBadgeStoreUtil.storeBinding.fields],
+            actions: [...loginStoreUtil.storeBinding.actions, ...agreementBadgeStoreUtil.storeBinding.actions]
+        });
         const accountInfo = wx.getAccountInfoSync();
         this.setData({
             scrollHeightPx: util.getHeightPx(),
@@ -26,6 +39,20 @@ Page({
             icpInfo: ICP_ID,
             orgName: ORGANIZATION_NAME,
             mpName: MINI_PROGRAM_NAME
+        })
+        try {
+            await loginStoreUtil.initLoginStore(this)
+            if (isLogin(this.getJWT())) {
+                await agreementBadgeStoreUtil.checkAgreementBadgeStatus(this)
+            }
+        } catch (e: any) {
+            this.setData({
+                errorMessage: getErrorMessage(e), errorVisible: true
+            })
+        }
+    }, onReady() {
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx(),
         })
     }, onResize() {
         this.setData({
@@ -81,6 +108,8 @@ Page({
                         "环境版本": accountInfo.miniProgram.envVersion,
                         "Lumina 版本": `${app.globalData.LUMINA_VERSION}`,
                         "主题": appBaseInfo.theme || 'light'
+                    }, "微信信息": {
+                        "小程序基础库版本": appBaseInfo.SDKVersion, "微信版本": appBaseInfo.version
                     }, "设备信息": {
                         "设备品牌": deviceInfo.brand,
                         "设备型号": deviceInfo.model,
@@ -131,15 +160,23 @@ Page({
 `
                     const sectionData = envData[section];
                     Object.keys(sectionData).forEach(key => {
-                        formattedData += `  ${key}: ${sectionData[key]}\n`;
+                        formattedData += `  ${key}：${sectionData[key]}\n`;
                     });
                     formattedData += '\n';
                 });
-                copyUtil(formattedData, Message, this);
+                this.setData({
+                    envInfoData: formattedData, showEnvInfoDialogVisible: true
+                })
             }
             this.touchNum = 0
         }, 1000)
         this.touchNum++
+    }, closeEnvInfoDialog() {
+        this.setData({
+            showEnvInfoDialogVisible: false
+        })
+    }, copyEnvInfo() {
+        copyUtil(this.data.envInfoData, Message, this)
     }
 })
 

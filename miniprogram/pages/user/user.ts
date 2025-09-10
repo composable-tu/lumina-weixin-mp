@@ -5,6 +5,7 @@ import {EMPTY_JWT, isLogin, loginStoreUtil} from "../../utils/store-utils/LoginS
 import {userInfoStoreUtil} from "../../utils/store-utils/UserInfoUtil";
 import {groupStoreUtil} from "../../utils/store-utils/GroupStoreUtil";
 import {getErrorMessage} from "../../utils/CommonUtil";
+import {agreementBadgeStoreUtil} from "../../utils/store-utils/AgreementBadgeStoreUtil";
 
 const util = require('../../utils/CommonUtil');
 
@@ -20,8 +21,8 @@ Page<IData, StoreInstance>({
     }, async onLoad() {
         this.storeBindings = createStoreBindings(this, {
             store,
-            fields: [...loginStoreUtil.storeBinding.fields, ...userInfoStoreUtil.storeBinding.fields, ...groupStoreUtil.storeBinding.fields],
-            actions: [...loginStoreUtil.storeBinding.actions, ...userInfoStoreUtil.storeBinding.actions, ...groupStoreUtil.storeBinding.actions]
+            fields: [...loginStoreUtil.storeBinding.fields, ...userInfoStoreUtil.storeBinding.fields, ...groupStoreUtil.storeBinding.fields, ...agreementBadgeStoreUtil.storeBinding.fields],
+            actions: [...loginStoreUtil.storeBinding.actions, ...userInfoStoreUtil.storeBinding.actions, ...groupStoreUtil.storeBinding.actions, ...agreementBadgeStoreUtil.storeBinding.actions]
         });
         this.getTabBar().init();
         const scrollHeightPx = util.getHeightPx()
@@ -33,6 +34,7 @@ Page<IData, StoreInstance>({
             if (isLogin(this.getJWT())) {
                 await userInfoStoreUtil.checkUserInfoStatus(this)
                 await groupStoreUtil.checkGroupStatus(this)
+                await agreementBadgeStoreUtil.checkAgreementBadgeStatus(this)
             }
         } catch (e: any) {
             this.setData({
@@ -43,8 +45,20 @@ Page<IData, StoreInstance>({
                 isRefreshing: false
             })
         }
+    }, onReady() {
+        const scrollHeightPx = util.getHeightPx()
+        this.setData({
+            scrollHeightPx: scrollHeightPx - util.rpx2px(80)
+        })
+    }, onResize() {
+        const scrollHeightPx = util.getHeightPx()
+        this.setData({
+            scrollHeightPx: scrollHeightPx - util.rpx2px(80)
+        })
     }, onUnload() {
         if (this.storeBindings) this.storeBindings.destroyStoreBindings();
+    }, async onShow(){
+        await this.onRefresh()
     }, errorVisibleChange(e: WechatMiniprogram.CustomEvent) {
         this.setData({
             errorVisible: e.detail.visible
@@ -74,6 +88,7 @@ Page<IData, StoreInstance>({
             if (isLogin(this.getJWT())) {
                 await userInfoStoreUtil.checkUserInfoStatus(this)
                 await groupStoreUtil.checkGroupStatus(this)
+                await agreementBadgeStoreUtil.checkAgreementBadgeStatus(this)
             }
         } catch (e: any) {
             this.setData({

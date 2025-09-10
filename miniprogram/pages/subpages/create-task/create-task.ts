@@ -58,9 +58,9 @@ interface IData {
     maxChoiceValue: number
 }
 
-const TaskTypeOptions = [{label: '签到', value: CHECK_IN}, {label: '抽签', value: LOTTERY}, {
+const TaskTypeOptions = [{label: '签到', value: CHECK_IN}, {
     label: '投票', value: VOTE
-},]
+}, {label: '抽签', value: LOTTERY, tag: '暂不可用'}]
 
 Page<IData, StoreInstance>({
     data: {
@@ -97,7 +97,6 @@ Page<IData, StoreInstance>({
             actions: [...loginStoreUtil.storeBinding.actions, ...userInfoStoreUtil.storeBinding.actions, ...groupStoreUtil.storeBinding.actions, ...taskStoreUtil.storeBinding.actions]
         });
         this.setData({
-            safeMarginBottomPx: util.getSafeAreaBottomPx(),
             scrollHeightPx: util.getHeightPx(),
             safeAreaBottomPx: util.getSafeAreaBottomPx(),
             isRefreshing: true,
@@ -122,7 +121,15 @@ Page<IData, StoreInstance>({
                 isRefreshing: false
             })
         }
-    }, onUnload() {
+    }, onReady(){
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx()
+        })
+    }, onResize(){
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx()
+        })
+    },onUnload() {
         if (this.storeBindings) this.storeBindings.destroyStoreBindings();
     }, errorVisibleChange(e: WechatMiniprogram.CustomEvent) {
         this.setData({
@@ -299,7 +306,6 @@ Page<IData, StoreInstance>({
                     await taskStoreUtil.checkTaskStatus(this)
                     wx.navigateBack()
                 } catch (e) {
-                    console.log(e)
                     const errMsg = getErrorMessage(e)
                     if (errMsg === "用户手动取消 SOTER 生物认证") normalToast(this, errMsg); else this.setData({
                         errorMessage: getErrorMessage(e), errorVisible: true
@@ -344,7 +350,6 @@ Page<IData, StoreInstance>({
                     await taskStoreUtil.checkTaskStatus(this)
                     wx.navigateBack()
                 } catch (e) {
-                    console.log(e)
                     const errMsg = getErrorMessage(e)
                     if (errMsg === "用户手动取消 SOTER 生物认证") normalToast(this, errMsg); else this.setData({
                         errorMessage: getErrorMessage(e), errorVisible: true

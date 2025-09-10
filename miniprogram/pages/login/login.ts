@@ -1,18 +1,20 @@
 // pages/login/login.ts
-
 import {loginStoreUtil, luminaLogin} from "../../utils/store-utils/LoginStoreUtil";
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {store, StoreInstance} from "../../utils/MobX";
-import {ICP_ID, PRIVACY_POLICY_URL, USER_AGREEMENT_URL} from "../../env";
+import {ICP_ID} from "../../env";
 import {checkIsSupportSoter} from "../../utils/security/SoterUtil";
 import {getErrorMessage} from "../../utils/CommonUtil";
+import {
+    agreementBadgeStoreUtil,
+    setNowAgreementDocsVersionsStorage
+} from "../../utils/store-utils/AgreementBadgeStoreUtil";
 
 const util = require("../../utils/CommonUtil");
 
 interface IData {
-    safeMarginBottomPx: number;
-    scrollHeightPx: number;
     safeAreaBottomPx: number;
+    scrollHeightPx: number;
     theme: string;
     icpInfo: string;
     footerLink: {
@@ -25,13 +27,17 @@ interface IData {
 Page<IData, StoreInstance>({
     data: {
         footerLink: [{
-            name: '用户协议', url: USER_AGREEMENT_URL, openType: '',
+            name: '用户协议',
+            url: '/pages/subpages/agreement-docs/agreement-docs?agreementDocsType=UserAgreement',
+            openType: 'navigate',
         }, {
-            name: '隐私政策', url: PRIVACY_POLICY_URL, openType: '',
+            name: '隐私政策', url: '/pages/about/privacy-about/privacy-about', openType: 'navigate',
         }], isLogining: false, soterHelpPopupVisible: false,
     }, async onLoad() {
         this.storeBindings = createStoreBindings(this, {
-            store, fields: [...loginStoreUtil.storeBinding.fields], actions: [...loginStoreUtil.storeBinding.actions]
+            store,
+            fields: [...loginStoreUtil.storeBinding.fields, ...agreementBadgeStoreUtil.storeBinding.fields],
+            actions: [...loginStoreUtil.storeBinding.actions, ...agreementBadgeStoreUtil.storeBinding.actions]
         });
         let isSupportSoter = false
         try {
@@ -40,7 +46,6 @@ Page<IData, StoreInstance>({
             isSupportSoter = false
         }
         this.setData({
-            safeMarginBottomPx: util.getSafeAreaBottomPx(),
             scrollHeightPx: util.getHeightPx(),
             safeAreaBottomPx: util.getSafeAreaBottomPx(),
             theme: wx.getAppBaseInfo().theme || 'light',
@@ -48,6 +53,14 @@ Page<IData, StoreInstance>({
             isSupportSoter: isSupportSoter ?? false,
         })
         await loginStoreUtil.initLoginStore(this)
+    }, onReady() {
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx()
+        })
+    }, onResize() {
+        this.setData({
+            scrollHeightPx: util.getHeightPx(), safeAreaBottomPx: util.getSafeAreaBottomPx()
+        })
     }, onUnload() {
         if (this.storeBindings) this.storeBindings.destroyStoreBindings();
     }, async login() {
@@ -56,6 +69,7 @@ Page<IData, StoreInstance>({
                 isLogining: true,
             })
             await luminaLogin(this);
+            setNowAgreementDocsVersionsStorage(this)
             wx.navigateBack()
         } catch (e: any) {
             this.setData({

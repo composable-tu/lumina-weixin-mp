@@ -3,7 +3,7 @@
 import ActionSheet, {ActionSheetTheme} from 'tdesign-miniprogram/action-sheet/index';
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {store, StoreInstance} from "../../utils/MobX";
-import {EMPTY_JWT, isLogin, loginStoreUtil} from "../../utils/store-utils/LoginStoreUtil"
+import {EMPTY_JWT, loginStoreUtil} from "../../utils/store-utils/LoginStoreUtil"
 import {getErrorMessage} from "../../utils/CommonUtil";
 import {CHECK_IN, taskStoreUtil} from "../../utils/store-utils/TaskStoreUtil";
 
@@ -12,7 +12,7 @@ const util = require('../../utils/CommonUtil');
 interface IData {
     EMPTY_JWT: string
     scrollHeightPx: number
-    safeMarginBottomPx: number
+    safeAreaBottomPx: number
     isRefreshing: boolean
 }
 
@@ -30,15 +30,13 @@ Page<IData, StoreInstance>({
         const scrollHeightPx = util.getHeightPx()
         this.setData({
             scrollHeightPx: scrollHeightPx - util.rpx2px(80),
-            safeMarginBottomPx: util.getSafeAreaBottomPx(),
+            safeAreaBottomPx: util.getSafeAreaBottomPx(),
             isRefreshing: true
         })
         this.setIsHideMore7DayEnabled(wx.getStorageSync('isHideMore7DayEnabled') ?? false)
         try {
             await loginStoreUtil.initLoginStore(this)
-            if (isLogin(this.getJWT())) {
-                await taskStoreUtil.checkTaskStatus(this)
-            }
+            await taskStoreUtil.checkTaskStatus(this)
         } catch (e: any) {
             console.error(e)
             this.setData({
@@ -49,12 +47,20 @@ Page<IData, StoreInstance>({
                 isRefreshing: false
             })
         }
+    }, onReady() {
+        const scrollHeightPx = util.getHeightPx()
+        this.setData({
+            scrollHeightPx: scrollHeightPx - util.rpx2px(80), safeAreaBottomPx: util.getSafeAreaBottomPx()
+        })
     }, onUnload() {
         if (this.storeBindings) this.storeBindings.destroyStoreBindings()
     }, onResize() {
+        const scrollHeightPx = util.getHeightPx()
         this.setData({
-            safeMarginBottomPx: util.getSafeAreaBottomPx()
+            scrollHeightPx: scrollHeightPx - util.rpx2px(80), safeAreaBottomPx: util.getSafeAreaBottomPx()
         })
+    }, async onShow(){
+        await this.onRefresh()
     }, errorVisibleChange(e: WechatMiniprogram.CustomEvent) {
         this.setData({
             errorVisible: e.detail.visible
@@ -73,9 +79,7 @@ Page<IData, StoreInstance>({
         });
         try {
             await loginStoreUtil.initLoginStore(this)
-            if (isLogin(this.getJWT())) {
-                await taskStoreUtil.checkTaskStatus(this)
-            }
+            await taskStoreUtil.checkTaskStatus(this)
         } catch (e: any) {
             this.setData({
                 errorMessage: getErrorMessage(e), errorVisible: true

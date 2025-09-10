@@ -8,9 +8,9 @@
 <scroll-view enable-passive enhanced scroll-with-animation scroll-y="{{true}}" show-scrollbar="{{false}}"
              style="height: {{scrollHeightPx-44+safeAreaBottomPx}}px;" type="list">
     <view class="pt-128rpx mx-32rpx flex justify-center items-center">
-            <image class="h-auto self-center" mode="widthFix" bind:tap="copyEnvData"
-                   src="{{ theme === 'dark' ? '../../assets/LogoColorWhite.png' : '../../assets/LogoColorBlack.png' }}"
-                   style="width: 66%;"/>
+        <image bind:tap="copyEnvData" class="h-auto self-center" mode="widthFix"
+               src="{{ theme === 'dark' ? '../../assets/LogoColorWhite.png' : '../../assets/LogoColorBlack.png' }}"
+               style="width: 66%;"/>
     </view>
     <view class="mt-128rpx">
         <t-cell-group theme="card">
@@ -29,7 +29,15 @@
         </t-cell-group>
     </view>
     <view class="mt-64rpx py-16rpx">
-        <t-footer links="{{footerLink}}" text="ICP 备案号：{{icpInfo}}"/>
+        <view class="flex items-center justify-center">
+            <t-link content="用户协议" hover navigator-props="{{userAgreementLink}}" size="small" theme="primary"/>
+            <t-badge dot wx:if="{{isShowUserAgreementBadge}}"/>
+            <t-footer class="mx-16rpx" text="|"/>
+            <t-link content="隐私政策" hover navigator-props="{{privacyAboutLink}}" size="small" theme="primary"/>
+            <t-badge dot
+                     wx:if="{{isShowPrivacyPolicyBadge||isShowPersonalInformationCollectionListBadge||isShowThirdPartyPersonalInformationSharingListBadge}}"/>
+        </view>
+        <t-footer text="ICP 备案号：{{icpInfo}}"/>
     </view>
     <view style="height: {{safeAreaBottomPx}}px"></view>
 </scroll-view>
@@ -65,3 +73,12 @@
         </view>
     </view>
 </t-popup>
+
+<t-dialog bind:cancel="copyEnvInfo" bind:confirm="closeEnvInfoDialog" cancel-btn="复制" confirm-btn="确定"
+          visible="{{showEnvInfoDialogVisible}}">
+    <scroll-view scroll-y slot="content" style="height: 55vh;" type="list">
+        <view class="font-size-32rpx mt-16rpx whitespace-pre-wrap">
+            {{envInfoData}}
+        </view>
+    </scroll-view>
+</t-dialog>

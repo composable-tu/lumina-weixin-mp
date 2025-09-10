@@ -17,7 +17,11 @@
     "pages/subpages/group-management/selected-group-user/selected-group-user",
     "pages/subpages/create-task/create-task",
     "pages/index/selected-task/check-in/check-in",
-    "pages/index/selected-task/vote/vote"
+    "pages/index/selected-task/vote/vote",
+    "pages/subpages/task-management/check-in/check-in",
+    "pages/subpages/agreement-docs/agreement-docs",
+    "pages/about/privacy-about/privacy-about",
+    "pages/subpages/task-management/vote/vote"
   ],
   "tabBar": {
     "custom": true,
