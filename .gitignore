@@ -27,6 +27,7 @@ project.private.config.json
 miniprogram/env.ts
 
 /.codebuddy/
+/.qoder/
 
 /miniprogram/agreement-docs/**
 !/miniprogram/agreement-docs/.gitkeep
