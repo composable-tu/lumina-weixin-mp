@@ -146,7 +146,7 @@ async function joinNewGroupPromise(jwt: string, groupId: string, userId: string,
     const requestJsonString = buildJoinNewGroupRequestBodyJson(userId, userName, device, groupPreAuthToken, requesterComment)
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/group/' + groupId + '/join', method: 'POST', header: {
+            url: `https://${LUMINA_SERVER_HOST}/group/${groupId}/join`, method: 'POST', header: {
                 Authorization: 'Bearer ' + jwt
             }, data: JSON.stringify(requestJsonString), success: (res) => {
                 if (res.statusCode === 200) resolve(res.data); else {

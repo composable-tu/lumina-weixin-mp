@@ -5,7 +5,7 @@ import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {store, StoreInstance} from "../../utils/MobX";
 import {EMPTY_JWT, loginStoreUtil} from "../../utils/store-utils/LoginStoreUtil"
 import {getErrorMessage} from "../../utils/CommonUtil";
-import {CHECK_IN, taskStoreUtil} from "../../utils/store-utils/TaskStoreUtil";
+import {CHECK_IN, taskStoreUtil, VOTE} from "../../utils/store-utils/TaskStoreUtil";
 
 const util = require('../../utils/CommonUtil');
 
@@ -113,7 +113,7 @@ Page<IData, StoreInstance>({
                     url: '/pages/index/selected-task/check-in/check-in?selectedTaskId=' + selectedTaskId
                 });
                 break;
-            case 'VOTE':
+            case VOTE:
                 wx.navigateTo({
                     url: '/pages/index/selected-task/vote/vote?selectedTaskId=' + selectedTaskId
                 });

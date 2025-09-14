@@ -28,7 +28,7 @@ export interface CheckInTaskUserStatusInfo {
 export async function getCheckInTaskManagerInfoPromise(jwt: string, taskId: string): Promise<CheckInTaskManagerInfo | null> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/taskManager/checkIn/' + taskId, header: {
+            url: `https://${LUMINA_SERVER_HOST}/taskManager/checkIn/${taskId}`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 if (res.statusCode === 200) {
@@ -63,13 +63,25 @@ export function buildInterventionCheckInTaskRequestBody(userId: string, interven
 export async function interventionCheckInTaskPromise(jwt: string, taskId: string, encryptRequest: EncryptContent) {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/taskManager/checkIn/' + taskId + '/interveneUser', header: {
+            url: `https://${LUMINA_SERVER_HOST}/taskManager/checkIn/${taskId}/interveneUser`, header: {
                 Authorization: 'Bearer ' + jwt
             }, method: 'POST', data: JSON.stringify(encryptRequest), success: (res) => {
                 if (res.statusCode === 200) resolve(res.data); else {
                     const resData = res.data as ErrorResponse;
                     reject(new Error(resData.message))
                 }
+            }, fail: reject
+        })
+    })
+}
+
+export async function downloadCheckInTaskInfoExcelPromise(jwt: string, taskId: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        wx.downloadFile({
+            url: `https://${LUMINA_SERVER_HOST}/taskManager/checkIn/${taskId}/export`, header: {
+                Authorization: 'Bearer ' + jwt
+            }, success: (res) => {
+                resolve(res.tempFilePath)
             }, fail: reject
         })
     })

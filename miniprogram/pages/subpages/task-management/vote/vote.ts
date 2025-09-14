@@ -1,13 +1,19 @@
 // pages/subpages/task-management/vote/vote.ts
+import ActionSheet, {ActionSheetTheme} from 'tdesign-miniprogram/action-sheet/index';
 import Message from 'tdesign-miniprogram/message/index';
-import {getVoteTaskManagerInfoPromise, VoteTaskInfoManagerInfo} from "../../../../utils/task-manager/VoteTaskManager";
+import {
+    downloadVoteTaskInfoExcelPromise,
+    getVoteTaskManagerInfoPromise,
+    VoteTaskInfoManagerInfo
+} from "../../../../utils/task-manager/VoteTaskManager";
 import {store, StoreInstance} from "../../../../utils/MobX";
 import {GroupInfo, groupStoreUtil} from "../../../../utils/store-utils/GroupStoreUtil";
 import {EMPTY_JWT, getIsUserSoterEnabled, isLogin, loginStoreUtil} from "../../../../utils/store-utils/LoginStoreUtil";
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {userInfoStoreUtil} from "../../../../utils/store-utils/UserInfoUtil";
-import {taskStoreUtil} from "../../../../utils/store-utils/TaskStoreUtil";
+import {taskManagerFabGrid, taskStoreUtil} from "../../../../utils/store-utils/TaskStoreUtil";
 import {getErrorMessage, isNullOrEmptyOrUndefined} from "../../../../utils/CommonUtil";
+import {downloadCheckInTaskInfoExcelPromise} from "../../../../utils/task-manager/CheckInTaskManager";
 
 const util = require('../../../../utils/CommonUtil');
 
@@ -125,21 +131,46 @@ Page<IData, StoreInstance>({
                 clickedOptionDescription: clickedOption?.optionDescription ?? null
             })
         }
+    }, handleFabClick() {
+        ActionSheet.show({
+            theme: ActionSheetTheme.Grid, selector: '#t-action-sheet', context: this, items: taskManagerFabGrid,
+        });
+    }, handleFabSelected(e: WechatMiniprogram.CustomEvent) {
+        switch (e.detail.selected.label) {
+            case '导出为 Excel':
+                this.downloadAndOpenExcel()
+                break;
+            default:
+                break;
+        }
+    }, async downloadAndOpenExcel() {
+        try {
+            const excelFileUrl = await downloadVoteTaskInfoExcelPromise(this.getJWT(), this.data.selectedTaskId)
+            wx.openDocument({
+                filePath: excelFileUrl, showMenu: true, fileType: 'xlsx', fail(err) {
+                    throw err
+                }
+            })
+        } catch (e) {
+            this.setData({
+                errorMessage: getErrorMessage(e), errorVisible: true
+            });
+        }
     }
 })
 
 async function getSelectedVoteTaskManagerInfo(that: WechatMiniprogram.Page.Instance<IData, StoreInstance>, selectedTaskId: string) {
-    const selectCheckInTaskManagerInfo = await getVoteTaskManagerInfoPromise(that.getJWT(), selectedTaskId)
-    if (selectCheckInTaskManagerInfo == null) that.setData({
+    const selectVoteTaskManagerInfo = await getVoteTaskManagerInfoPromise(that.getJWT(), selectedTaskId)
+    if (selectVoteTaskManagerInfo == null) that.setData({
         errorMessage: "未找到任务", errorVisible: true
     }); else {
-        const targetGroupInfo: GroupInfo | undefined = that.getGroupInfo().find((groupInfo: GroupInfo) => groupInfo.groupId === selectCheckInTaskManagerInfo.groupId)
-        const participantCount = selectCheckInTaskManagerInfo.voteTaskOptions.reduce((total, option) => total + (option.voteParticipants?.length || 0), 0)
+        const targetGroupInfo: GroupInfo | undefined = that.getGroupInfo().find((groupInfo: GroupInfo) => groupInfo.groupId === selectVoteTaskManagerInfo.groupId)
+        const participantCount = selectVoteTaskManagerInfo.voteTaskOptions.reduce((total, option) => total + (option.voteParticipants?.length || 0), 0)
         if (targetGroupInfo) that.setData({
             selectedTaskId: selectedTaskId,
             isGroupAdmin: that.getGroupInfo().length !== 0 ? util.isAdminAndSuperAdmin(targetGroupInfo.permission) : false,
-            isTaskCreator: that.getUserInfo().userId === selectCheckInTaskManagerInfo.creatorId,
-            selectedTask: selectCheckInTaskManagerInfo,
+            isTaskCreator: that.getUserInfo().userId === selectVoteTaskManagerInfo.creatorId,
+            selectedTask: selectVoteTaskManagerInfo,
             participantCount: participantCount
         })
     }

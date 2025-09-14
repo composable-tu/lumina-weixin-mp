@@ -39,7 +39,7 @@ export interface VoteTaskNonParticipantInfo {
 export async function getVoteTaskManagerInfoPromise(jwt: string, taskId: string): Promise<VoteTaskInfoManagerInfo | null> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/taskManager/vote/' + taskId, header: {
+            url: `https://${LUMINA_SERVER_HOST}/taskManager/vote/${taskId}`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 if (res.statusCode === 200) {
@@ -49,6 +49,19 @@ export async function getVoteTaskManagerInfoPromise(jwt: string, taskId: string)
                     const resData = res.data as ErrorResponse;
                     reject(new Error(resData.message))
                 }
+            }, fail: reject
+        })
+    })
+}
+
+
+export async function downloadVoteTaskInfoExcelPromise(jwt: string, taskId: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        wx.downloadFile({
+            url: `https://${LUMINA_SERVER_HOST}/taskManager/vote/${taskId}/export`, header: {
+                Authorization: 'Bearer ' + jwt
+            }, success: (res) => {
+                resolve(res.tempFilePath)
             }, fail: reject
         })
     })

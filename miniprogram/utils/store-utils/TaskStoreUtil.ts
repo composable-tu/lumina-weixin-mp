@@ -37,7 +37,7 @@ export async function getTaskList(that: WechatMiniprogram.Page.TrivialInstance |
 async function getTaskListPromise(jwt: string): Promise<TaskInfo[]> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/task', header: {
+            url: `https://${LUMINA_SERVER_HOST}/task`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 resolve(res.data as TaskInfo[]);
@@ -63,7 +63,7 @@ export interface CheckInTaskInfo {
 export async function getCheckInTaskInfoPromise(jwt: string, taskId: string): Promise<CheckInTaskInfo | null> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/task/checkIn/' + taskId, header: {
+            url: `https://${LUMINA_SERVER_HOST}/task/checkIn/${taskId}`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 if (res.statusCode === 200) {
@@ -106,7 +106,7 @@ export interface VoteOption {
 export async function getVoteTaskInfoPromise(jwt: string, taskId: string): Promise<VoteTaskInfo | null> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/task/vote/' + taskId, header: {
+            url: `https://${LUMINA_SERVER_HOST}/task/vote/${taskId}`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 if (res.statusCode === 200) {
@@ -120,6 +120,10 @@ export async function getVoteTaskInfoPromise(jwt: string, taskId: string): Promi
         })
     })
 }
+
+export const taskManagerFabGrid = [{
+    label: '导出为 Excel', icon: 'file-excel',
+}];
 
 export const CHECK_IN = "CHECK_IN"
 export const LOTTERY = "LOTTERY"

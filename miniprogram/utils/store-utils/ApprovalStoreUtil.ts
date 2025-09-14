@@ -46,7 +46,7 @@ export interface ApprovalInfo {
 async function getApprovalListPromise(jwt: string): Promise<ApprovalInfo[]> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/approval/admin', header: {
+            url: `https://${LUMINA_SERVER_HOST}/approval/admin`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 resolve(res.data as ApprovalInfo[]);
@@ -58,7 +58,7 @@ async function getApprovalListPromise(jwt: string): Promise<ApprovalInfo[]> {
 async function getSelfApprovalListPromise(jwt: string): Promise<ApprovalInfo[]> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/approval/self', header: {
+            url: `https://${LUMINA_SERVER_HOST}/approval/self`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 resolve(res.data as ApprovalInfo[]);
@@ -83,7 +83,7 @@ export interface JoinGroupApprovalInfo {
 export async function getApprovalInfoPromise(jwt: string, approvalId: string): Promise<JoinGroupApprovalInfo | null> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/approval/' + approvalId, header: {
+            url: `https://${LUMINA_SERVER_HOST}/approval/${approvalId}`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 if (res.statusCode === 200) {

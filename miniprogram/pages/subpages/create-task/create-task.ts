@@ -483,7 +483,7 @@ function buildCreateVoteTaskRequestBody(taskName: string, taskEndTime: string, t
 async function createTaskPromise(jwt: string, selectedGroupId: string, encryptRequest: EncryptContent) {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/task/create/' + selectedGroupId, header: {
+            url: `https://${LUMINA_SERVER_HOST}/task/create/${selectedGroupId}`, header: {
                 Authorization: 'Bearer ' + jwt
             }, method: 'POST', data: JSON.stringify(encryptRequest), success: (res) => {
                 if (res.statusCode === 200) {

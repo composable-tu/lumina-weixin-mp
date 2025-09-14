@@ -29,7 +29,7 @@ export const isJoinedAnyGroup = (that: WechatMiniprogram.Page.TrivialInstance | 
 async function getGroupListPromise(jwt: string): Promise<GroupInfo[]> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/group', header: {
+            url: `https://${LUMINA_SERVER_HOST}/group`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 if (res.statusCode === 200) resolve(res.data as GroupInfo[]); else {
@@ -58,7 +58,7 @@ export interface GroupInfoMember {
 export async function getGroupInfoPromise(jwt: string, groupId: string): Promise<GroupInfoDetail> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/group/' + groupId, header: {
+            url: `https://${LUMINA_SERVER_HOST}/group/${groupId}`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 if (res.statusCode === 200) resolve(res.data as GroupInfoDetail); else {
@@ -79,7 +79,7 @@ export async function getGroupInfoPromise(jwt: string, groupId: string): Promise
 export async function quitGroupPromise(jwt: string, groupId: string, soterResult: WechatMiniprogram.StartSoterAuthenticationSuccessCallbackResult | null) {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/group/' + groupId + '/quit', method: 'POST', header: {
+            url: `https://${LUMINA_SERVER_HOST}/group/${groupId}/quit`, method: 'POST', header: {
                 Authorization: 'Bearer ' + jwt
             }, data: JSON.stringify(buildQuitGroupRequestBody(soterResult)), success(res) {
                 if (res.statusCode === 200) resolve(res.data); else {

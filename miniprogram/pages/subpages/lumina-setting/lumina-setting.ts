@@ -177,7 +177,7 @@ async function startSwitchSoter(that: WechatMiniprogram.Page.Instance<IData, Sto
 async function switchSoterRequest(jwt: string, action: boolean, soterResult: WechatMiniprogram.StartSoterAuthenticationSuccessCallbackResult): Promise<WechatMiniprogram.RequestSuccessCallbackResult> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/soter/action', header: {
+            url: `https://${LUMINA_SERVER_HOST}/soter/action`, header: {
                 Authorization: 'Bearer ' + jwt
             }, method: 'POST', data: JSON.stringify({
                 action: action ? 'enable' : 'disable', soterInfo: {

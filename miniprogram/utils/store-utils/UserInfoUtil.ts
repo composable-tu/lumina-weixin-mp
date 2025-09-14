@@ -28,7 +28,7 @@ export interface UserInfo {
 async function getUserInfoPromise(jwt: string): Promise<UserInfo> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/user', header: {
+            url: `https://${LUMINA_SERVER_HOST}/user`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 if (res.statusCode === 200) {

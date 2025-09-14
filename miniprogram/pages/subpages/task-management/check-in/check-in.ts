@@ -1,4 +1,5 @@
 // pages/subpages/task-management/check-in/check-in.ts
+import ActionSheet, {ActionSheetTheme} from 'tdesign-miniprogram/action-sheet/index';
 import {store, StoreInstance} from "../../../../utils/MobX";
 import {EMPTY_JWT, getIsUserSoterEnabled, isLogin, loginStoreUtil} from "../../../../utils/store-utils/LoginStoreUtil";
 import {createStoreBindings} from "mobx-miniprogram-bindings";
@@ -13,11 +14,13 @@ import {
     MARK_AS_PENDING,
     PARTICIPATED,
     PENDING,
+    taskManagerFabGrid,
     taskStoreUtil
 } from "../../../../utils/store-utils/TaskStoreUtil";
 import {
     CheckInTaskManagerInfo,
     CheckInTaskUserStatusInfo,
+    downloadCheckInTaskInfoExcelPromise,
     getCheckInTaskManagerInfoPromise,
     interventionCheckInTask
 } from "../../../../utils/task-manager/CheckInTaskManager";
@@ -247,6 +250,31 @@ Page<IData, StoreInstance>({
             this.setData({
                 isParticipantMarking: false
             })
+        }
+    }, handleFabClick() {
+        ActionSheet.show({
+            theme: ActionSheetTheme.Grid, selector: '#t-action-sheet', context: this, items: taskManagerFabGrid,
+        });
+    }, handleFabSelected(e: WechatMiniprogram.CustomEvent) {
+        switch (e.detail.selected.label) {
+            case '导出为 Excel':
+                this.downloadAndOpenExcel()
+                break;
+            default:
+                break;
+        }
+    }, async downloadAndOpenExcel() {
+        try {
+            const excelFileUrl = await downloadCheckInTaskInfoExcelPromise(this.getJWT(), this.data.selectedTaskId)
+            wx.openDocument({
+                filePath: excelFileUrl, showMenu: true, fileType: 'xlsx', fail(err) {
+                    throw err
+                }
+            })
+        } catch (e) {
+            this.setData({
+                errorMessage: getErrorMessage(e), errorVisible: true
+            });
         }
     }
 })

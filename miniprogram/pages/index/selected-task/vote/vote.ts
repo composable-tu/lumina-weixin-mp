@@ -219,7 +219,7 @@ async function startVotePromise(jwt: string, taskId: string, voteOptions: string
     } : {}
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/task/vote/' + taskId, header: {
+            url: `https://${LUMINA_SERVER_HOST}/task/vote/${taskId}`, header: {
                 'Authorization': 'Bearer ' + jwt
             }, method: 'POST', data: JSON.stringify({
                 voteOptions: voteOptions, ...(soterResult && {soterInfo: {...soterInfo}})
@@ -239,7 +239,7 @@ async function startRecallVotePromise(jwt: string, taskId: string, soterResult: 
     } : {}
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/task/vote/' + taskId + '/recall', header: {
+            url: `https://${LUMINA_SERVER_HOST}/task/vote/${taskId}/recall`, header: {
                 'Authorization': 'Bearer ' + jwt
             }, method: 'POST', data: JSON.stringify({
                 ...(soterResult && {soterInfo: {...soterInfo}})

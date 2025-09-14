@@ -194,7 +194,7 @@ async function actionToApproval(that: WechatMiniprogram.Page.Instance<IData, Sto
 async function actionToApprovalPromise(jwt: string, selectedApprovalId: string, encryptRequest: EncryptContent) {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/approval/' + selectedApprovalId, header: {
+            url: `https://${LUMINA_SERVER_HOST}/approval/${selectedApprovalId}`, header: {
                 Authorization: 'Bearer ' + jwt
             }, method: 'POST', data: JSON.stringify(encryptRequest), success: (res) => {
                 if (res.statusCode === 200) {

@@ -155,7 +155,7 @@ async function getSelectedCheckInTaskInfo(that: WechatMiniprogram.Page.Instance<
 async function startCheckInPromise(jwt: string, taskId: string, token: string | null) {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/task/checkIn/' + taskId, header: {
+            url: `https://${LUMINA_SERVER_HOST}/task/checkIn/${taskId}`, header: {
                 'Authorization': 'Bearer ' + jwt
             }, method: 'POST', data: JSON.stringify(isNullOrEmptyOrUndefined(token) ? {} : {
                 checkInToken: token

@@ -75,7 +75,7 @@ async function luminaLoginRequestPromise(): Promise<string> {
     const weixinLoginCode = await weixinLoginPromise();
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/weixin/login',
+            url: `https://${LUMINA_SERVER_HOST}/weixin/login`,
             method: 'POST',
             data: JSON.stringify({code: weixinLoginCode}),
             success: (res) => {
@@ -100,7 +100,7 @@ async function luminaLoginRequestPromise(): Promise<string> {
 async function validateJwtPromise(jwt: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/weixin/validate', header: {
+            url: `https://${LUMINA_SERVER_HOST}/weixin/validate`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 if (res.statusCode === 200) resolve(true); else resolve(false);
@@ -125,7 +125,7 @@ export async function getIsUserSoterEnabled(that: WechatMiniprogram.Page.Trivial
 async function getIsUserSoterEnabledPromise(jwt: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/soter/check', header: {
+            url: `https://${LUMINA_SERVER_HOST}/soter/check`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 if (res.statusCode === 200) {
