@@ -2,6 +2,7 @@
 <wxs module="utils" src="../../../../utils/CommonUtil.wxs"></wxs>
 
 <t-message id="t-message"/>
+<t-toast id="t-toast" />
 
 <error-popup bind:visible-change="errorVisibleChange" message="{{errorMessage}}" visible="{{errorVisible}}"/>
 

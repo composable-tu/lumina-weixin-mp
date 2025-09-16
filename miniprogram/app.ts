@@ -2,7 +2,7 @@
 
 App({
     globalData: {
-        LUMINA_VERSION: "0.0.2"
+        LUMINA_VERSION: "0.0.3"
     }, onLaunch() {
     },
 })

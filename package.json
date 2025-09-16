@@ -1,6 +1,6 @@
 {
   "name": "lumina-weixin-mp",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "LuminaPJ Weixin Mini Program",
   "author": {
     "name": "LuminaPJ"
@@ -21,14 +21,14 @@
   },
   "devDependencies": {
     "@types/jsuri": "^1.3.35",
-    "@unocss/cli": "^66.5.0",
+    "@unocss/cli": "^66.5.1",
     "license-checker-rseidelsohn": "^4.4.2",
     "marked": "^16.2.1",
     "miniprogram-api-typings": "^4.1.0",
     "shelljs": "^0.10.0",
     "spdx-license-list": "^6.10.0",
     "uglify-js": "^3.19.3",
-    "unocss": "^66.5.0"
+    "unocss": "^66.5.1"
   },
   "scripts": {
     "unocss": "unocss miniprogram/components/**/*.wxml miniprogram/custom-tab-bar/**/*.wxml miniprogram/pages/**/*.wxml !miniprogram/pages/**/node_modules/** !miniprogram/pages/**/miniprogram_npm/** -c uno.config.js --watch -o ./miniprogram/unocss.wxss",

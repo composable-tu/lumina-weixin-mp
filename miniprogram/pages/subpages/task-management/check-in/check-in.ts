@@ -5,6 +5,7 @@ import {EMPTY_JWT, getIsUserSoterEnabled, isLogin, loginStoreUtil} from "../../.
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {userInfoStoreUtil} from "../../../../utils/store-utils/UserInfoUtil";
 import Message from 'tdesign-miniprogram/message/index';
+import Toast, {hideToast} from 'tdesign-miniprogram/toast/index';
 import {GroupInfo, groupStoreUtil} from "../../../../utils/store-utils/GroupStoreUtil";
 import {getErrorMessage, isNullOrEmptyOrUndefined} from "../../../../utils/CommonUtil";
 import {
@@ -264,6 +265,9 @@ Page<IData, StoreInstance>({
                 break;
         }
     }, async downloadAndOpenExcel() {
+        Toast({
+            context: this, selector: '#t-toast', message: '导出中', duration: -1, theme: 'loading', direction: 'column',
+        });
         try {
             const excelFileUrl = await downloadCheckInTaskInfoExcelPromise(this.getJWT(), this.data.selectedTaskId)
             wx.openDocument({
@@ -274,6 +278,10 @@ Page<IData, StoreInstance>({
         } catch (e) {
             this.setData({
                 errorMessage: getErrorMessage(e), errorVisible: true
+            });
+        } finally {
+            hideToast({
+                context: this, selector: '#t-toast',
             });
         }
     }

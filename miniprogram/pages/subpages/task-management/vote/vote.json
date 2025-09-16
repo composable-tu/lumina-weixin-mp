@@ -14,6 +14,7 @@
     "t-progress": "tdesign-miniprogram/progress/progress",
     "t-pull-down-refresh": "tdesign-miniprogram/pull-down-refresh/pull-down-refresh",
     "t-result": "tdesign-miniprogram/result/result",
-    "t-tag": "tdesign-miniprogram/tag/tag"
+    "t-tag": "tdesign-miniprogram/tag/tag",
+    "t-toast": "tdesign-miniprogram/toast/toast"
   }
 }

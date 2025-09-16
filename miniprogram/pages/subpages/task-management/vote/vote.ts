@@ -1,6 +1,7 @@
 // pages/subpages/task-management/vote/vote.ts
 import ActionSheet, {ActionSheetTheme} from 'tdesign-miniprogram/action-sheet/index';
 import Message from 'tdesign-miniprogram/message/index';
+import Toast, {hideToast} from 'tdesign-miniprogram/toast/index';
 import {
     downloadVoteTaskInfoExcelPromise,
     getVoteTaskManagerInfoPromise,
@@ -13,7 +14,6 @@ import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {userInfoStoreUtil} from "../../../../utils/store-utils/UserInfoUtil";
 import {taskManagerFabGrid, taskStoreUtil} from "../../../../utils/store-utils/TaskStoreUtil";
 import {getErrorMessage, isNullOrEmptyOrUndefined} from "../../../../utils/CommonUtil";
-import {downloadCheckInTaskInfoExcelPromise} from "../../../../utils/task-manager/CheckInTaskManager";
 
 const util = require('../../../../utils/CommonUtil');
 
@@ -144,6 +144,9 @@ Page<IData, StoreInstance>({
                 break;
         }
     }, async downloadAndOpenExcel() {
+        Toast({
+            context: this, selector: '#t-toast', message: '导出中', duration: -1, theme: 'loading', direction: 'column',
+        });
         try {
             const excelFileUrl = await downloadVoteTaskInfoExcelPromise(this.getJWT(), this.data.selectedTaskId)
             wx.openDocument({
@@ -154,6 +157,10 @@ Page<IData, StoreInstance>({
         } catch (e) {
             this.setData({
                 errorMessage: getErrorMessage(e), errorVisible: true
+            });
+        } finally {
+            hideToast({
+                context: this, selector: '#t-toast',
             });
         }
     }
