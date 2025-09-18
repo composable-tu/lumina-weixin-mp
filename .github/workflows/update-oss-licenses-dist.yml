@@ -26,9 +26,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    defaults:
-      run:
-        working-directory: /
 
     steps:
       - name: Checkout repository
