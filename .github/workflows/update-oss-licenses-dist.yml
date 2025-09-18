@@ -36,8 +36,11 @@ jobs:
         with:
           node-version: 'latest'
 
+      - name: Install vlt
+        run: yarn global add vlt
+
       - name: Install dependencies
-        run: yarn install
+        run: vlt install
 
       - name: Build OSS Licenses Dist
         run: yarn run build-oss-licenses-dist
