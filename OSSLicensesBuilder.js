@@ -65,7 +65,7 @@ function buildLicenses(outputFile, customFormat, customPath, startPath = '') {
     const jsFile = path.join(outputDir, `${outputFile}.js`);
     const jsFileText = path.join(outputDir, `${outputFile}Text.js`);
     try {
-        const output = runCommand('license-checker-rseidelsohn', [startPath, '--customPath', customFormat, '--json', '--production']);
+        const output = runCommand('license-checker-rseidelsohn', [startPath, '--customPath', customFormat, '--json']);
         const jsonData = JSON.parse(output);
         if (Object.keys(jsonData).length === 0) throw new Error('生成的许可证数据为空');
         const jsonDataWithoutLicenseText = {};
@@ -83,7 +83,7 @@ function buildLicenses(outputFile, customFormat, customPath, startPath = '') {
             const spdxItem = spdx[spdxId]
             jsonDataWithoutLicenseText[key].licenseName = (spdxItem) ? spdxItem.name : spdxId
         }
-        const jsContentWithoutLicenseText = `module.exports = ${JSON5.stringify(jsonDataWithoutLicenseText, null, 2)};`;
+        const jsContentWithoutLicenseText = `export default${JSON5.stringify(jsonDataWithoutLicenseText, null, 2)};`;
         const minifiedResultWithoutLicenseText = uglifyJS.minify(jsContentWithoutLicenseText, {
             mangle: {toplevel: true},
             compress: {sequences: true, dead_code: true, drop_debugger: true, unsafe: false},
@@ -91,7 +91,7 @@ function buildLicenses(outputFile, customFormat, customPath, startPath = '') {
         });
         if (minifiedResultWithoutLicenseText.error) throw minifiedResultWithoutLicenseText.error;
         fs.writeFileSync(jsFile, minifiedResultWithoutLicenseText.code, {encoding: 'utf8', flag: 'w', mode: 0o644});
-        const jsContentLicenseText = `module.exports = ${JSON5.stringify(licenseTextData, null, 2)};`;
+        const jsContentLicenseText = `export default${JSON5.stringify(licenseTextData, null, 2)};`;
         const minifiedResultLicenseText = uglifyJS.minify(jsContentLicenseText, {
             mangle: {toplevel: true},
             compress: {sequences: true, dead_code: true, drop_debugger: true, unsafe: false},
