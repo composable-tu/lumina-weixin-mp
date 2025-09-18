@@ -1,4 +1,16 @@
 /**
+ * Copyright (c) 2025 LuminaPJ
+ * SM2 Key Generator is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
+
+/**
  * 开始 SOTER 生物认证
  * @param challenge 认证事件备注
  * @return `WechatMiniprogram.StartSoterAuthenticationSuccessCallbackResult` 或 `null`，如果返回 `null` 则表示当前设备不支持任何生物认证或用户未在设备中录入任何生物特征。参见 [`object.success` 回调函数](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/soter/wx.startSoterAuthentication.html)
