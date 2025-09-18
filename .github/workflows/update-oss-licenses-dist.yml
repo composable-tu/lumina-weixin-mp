@@ -28,7 +28,7 @@ jobs:
       pull-requests: write
     defaults:
       run:
-        working-directory: source
+        working-directory: /
 
     steps:
       - name: Checkout repository
