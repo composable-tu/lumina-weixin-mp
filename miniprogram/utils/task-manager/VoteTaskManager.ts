@@ -72,7 +72,7 @@ export async function downloadVoteTaskInfoExcelPromise(jwt: string, taskId: stri
             url: `https://${LUMINA_SERVER_HOST}/taskManager/vote/${taskId}/export`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
-                resolve(res.tempFilePath)
+                if (res.statusCode === 200 && res.tempFilePath) resolve(res.tempFilePath); else reject(new Error(res.errMsg))
             }, fail: reject
         })
     })
