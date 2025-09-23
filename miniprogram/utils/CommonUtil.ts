@@ -40,14 +40,14 @@ export const px2rpx = (px: number): number => {
 export const getHeightPx = (): number => {
     const windowInfo = wx.getWindowInfo()
     const safeAreaHeight = windowInfo.safeArea.height
-    if (safeAreaHeight === 0 && safeAreaHeight === undefined) return windowInfo.windowHeight
+    if (safeAreaHeight === 0 || safeAreaHeight === undefined) return windowInfo.windowHeight
     return safeAreaHeight
 }
 
 export const getSafeAreaBottomPx = (): number => {
     const windowInfo = wx.getWindowInfo()
     const safeAreaBottom = windowInfo.screenHeight - windowInfo.safeArea.bottom
-    if (safeAreaBottom === 0 && safeAreaBottom === undefined) return 0
+    if (safeAreaBottom === 0 || safeAreaBottom === undefined) return 0
     return safeAreaBottom
 }
 
