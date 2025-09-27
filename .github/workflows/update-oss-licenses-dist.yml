@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 'latest'
 
@@ -71,7 +71,7 @@ jobs:
 
       - name: Create Pull Request
         if: env.files_changed == 'true'
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v7
         with:
           title: '更新开放源代码许可信息文件'
           body: '自动化更新 npm 依赖项的开放源代码许可信息文件'
