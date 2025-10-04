@@ -4,6 +4,7 @@
   "styleIsolation": "apply-shared",
   "usingComponents": {
     "error-popup": "/components/error-popup/error-popup",
+    "t-action-sheet": "tdesign-miniprogram/action-sheet/action-sheet",
     "t-button": "tdesign-miniprogram/button/button",
     "t-cell": "tdesign-miniprogram/cell/cell",
     "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
@@ -12,6 +13,7 @@
     "t-popup": "tdesign-miniprogram/popup/popup",
     "t-pull-down-refresh": "tdesign-miniprogram/pull-down-refresh/pull-down-refresh",
     "t-result": "tdesign-miniprogram/result/result",
-    "t-tag": "tdesign-miniprogram/tag/tag"
+    "t-tag": "tdesign-miniprogram/tag/tag",
+    "t-toast": "tdesign-miniprogram/toast/toast"
   }
 }

@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2025 LuminaPJ
+ * SM2 Key Generator is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
 import {OPEN_WE_ANALYSIS} from "../env";
 
 export const formatTime = (date: Date) => {
@@ -17,26 +28,22 @@ const formatNumber = (n: number) => {
 }
 
 // rpx to px
-export const rpx2px = (rpx: number): number => {
-    return Math.round(rpx / 750 * wx.getWindowInfo().windowWidth)
-}
+export const rpx2px = (rpx: number): number => Math.round(rpx / 750 * wx.getWindowInfo().windowWidth)
 
 // px to rpx
-export const px2rpx = (px: number): number => {
-    return Math.round(px / wx.getWindowInfo().windowWidth * 750)
-}
+export const px2rpx = (px: number): number => Math.round(px / wx.getWindowInfo().windowWidth * 750)
 
 export const getHeightPx = (): number => {
     const windowInfo = wx.getWindowInfo()
     const safeAreaHeight = windowInfo.safeArea.height
-    if (safeAreaHeight === 0 && safeAreaHeight === undefined) return windowInfo.windowHeight
+    if (safeAreaHeight === 0 || safeAreaHeight === undefined) return windowInfo.windowHeight
     return safeAreaHeight
 }
 
 export const getSafeAreaBottomPx = (): number => {
     const windowInfo = wx.getWindowInfo()
     const safeAreaBottom = windowInfo.screenHeight - windowInfo.safeArea.bottom
-    if (safeAreaBottom === 0 && safeAreaBottom === undefined) return 0
+    if (safeAreaBottom === 0 || safeAreaBottom === undefined) return 0
     return safeAreaBottom
 }
 
@@ -91,9 +98,7 @@ export function copyUtil(copyData: string, Message: any, that: WechatMiniprogram
     })
 }
 
-export const isNullOrEmptyOrUndefined = (value: any): boolean => {
-    return value === null || value === undefined || value === ''
-}
+export const isNullOrEmptyOrUndefined = (value: any): boolean => value === null || value === undefined || value === ''
 
 export const isNullOrUndefined = (value: any): boolean => {
     return value === null || value === undefined
@@ -109,20 +114,23 @@ export const getErrorMessage = (e: any): string => {
     if (e.message) return e.message; else if (e.errMsg) return e.errMsg; else return e.toString()
 }
 
-export function isAdminAndSuperAdmin(permission: string) {
-    return permission === 'ADMIN' || permission === 'SUPER_ADMIN'
-}
+export const isAdminAndSuperAdmin = (permission: string) => permission === 'ADMIN' || permission === 'SUPER_ADMIN';
 
-export function isSuperAdmin(permission: string) {
-    return permission === 'SUPER_ADMIN'
-}
+export const isSuperAdmin = (permission: string) => permission === 'SUPER_ADMIN';
 
-export function isAdmin(permission: string) {
-    return permission === 'ADMIN'
-}
+export const isAdmin = (permission: string) => permission === 'ADMIN';
 
 export const GROUP_JOIN = 'GROUP_JOIN'
 export const TASK_EXPAND_GROUP = 'TASK_EXPAND_GROUP'
 export const TASK_CREATION = 'TASK_CREATION'
 
+/**
+ * 微信小程序内打开文档
+ * @param options 参数
+ */
+export function weixinOpenDocumentPromise(options: WechatMiniprogram.OpenDocumentOption): Promise<void> {
+    return new Promise((resolve, reject) => {
+        wx.openDocument({...options, success: () => resolve(), fail: reject});
+    });
+}
 

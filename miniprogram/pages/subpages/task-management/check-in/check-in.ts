@@ -1,11 +1,23 @@
-// pages/subpages/task-management/check-in/check-in.ts
+/**
+ * Copyright (c) 2025 LuminaPJ
+ * SM2 Key Generator is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
+import ActionSheet, {ActionSheetTheme} from 'tdesign-miniprogram/action-sheet/index';
 import {store, StoreInstance} from "../../../../utils/MobX";
 import {EMPTY_JWT, getIsUserSoterEnabled, isLogin, loginStoreUtil} from "../../../../utils/store-utils/LoginStoreUtil";
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {userInfoStoreUtil} from "../../../../utils/store-utils/UserInfoUtil";
 import Message from 'tdesign-miniprogram/message/index';
+import Toast, {hideToast} from 'tdesign-miniprogram/toast/index';
 import {GroupInfo, groupStoreUtil} from "../../../../utils/store-utils/GroupStoreUtil";
-import {getErrorMessage, isNullOrEmptyOrUndefined} from "../../../../utils/CommonUtil";
+import {getErrorMessage, isNullOrEmptyOrUndefined, weixinOpenDocumentPromise} from "../../../../utils/CommonUtil";
 import {
     EXPIRED,
     MARK_AS_NOT_PARTICIPANT,
@@ -13,11 +25,13 @@ import {
     MARK_AS_PENDING,
     PARTICIPATED,
     PENDING,
+    taskManagerFabGrid,
     taskStoreUtil
 } from "../../../../utils/store-utils/TaskStoreUtil";
 import {
     CheckInTaskManagerInfo,
     CheckInTaskUserStatusInfo,
+    downloadCheckInTaskInfoExcelPromise,
     getCheckInTaskManagerInfoPromise,
     interventionCheckInTask
 } from "../../../../utils/task-manager/CheckInTaskManager";
@@ -247,6 +261,34 @@ Page<IData, StoreInstance>({
             this.setData({
                 isParticipantMarking: false
             })
+        }
+    }, handleFabClick() {
+        ActionSheet.show({
+            theme: ActionSheetTheme.Grid, selector: '#t-action-sheet', context: this, items: taskManagerFabGrid,
+        });
+    }, handleFabSelected(e: WechatMiniprogram.CustomEvent) {
+        switch (e.detail.selected.label) {
+            case '导出为 Excel':
+                this.downloadAndOpenExcel()
+                break;
+            default:
+                break;
+        }
+    }, async downloadAndOpenExcel() {
+        Toast({
+            context: this, selector: '#t-toast', message: '导出中', duration: -1, theme: 'loading', direction: 'column',
+        });
+        try {
+            const excelFileUrl = await downloadCheckInTaskInfoExcelPromise(this.getJWT(), this.data.selectedTaskId)
+            await weixinOpenDocumentPromise({filePath: excelFileUrl, showMenu: true, fileType: 'xlsx'})
+        } catch (e) {
+            this.setData({
+                errorMessage: getErrorMessage(e), errorVisible: true
+            });
+        } finally {
+            hideToast({
+                context: this, selector: '#t-toast',
+            });
         }
     }
 })

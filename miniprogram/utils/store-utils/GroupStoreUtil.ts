@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2025 LuminaPJ
+ * SM2 Key Generator is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
 import {LUMINA_SERVER_HOST} from "../../env";
 import {isLogin} from "./LoginStoreUtil";
 import {ErrorResponse} from "../CommonUtil";
@@ -29,7 +40,7 @@ export const isJoinedAnyGroup = (that: WechatMiniprogram.Page.TrivialInstance | 
 async function getGroupListPromise(jwt: string): Promise<GroupInfo[]> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/group', header: {
+            url: `https://${LUMINA_SERVER_HOST}/group`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 if (res.statusCode === 200) resolve(res.data as GroupInfo[]); else {
@@ -58,7 +69,7 @@ export interface GroupInfoMember {
 export async function getGroupInfoPromise(jwt: string, groupId: string): Promise<GroupInfoDetail> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/group/' + groupId, header: {
+            url: `https://${LUMINA_SERVER_HOST}/group/${groupId}`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 if (res.statusCode === 200) resolve(res.data as GroupInfoDetail); else {
@@ -79,7 +90,7 @@ export async function getGroupInfoPromise(jwt: string, groupId: string): Promise
 export async function quitGroupPromise(jwt: string, groupId: string, soterResult: WechatMiniprogram.StartSoterAuthenticationSuccessCallbackResult | null) {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/group/' + groupId + '/quit', method: 'POST', header: {
+            url: `https://${LUMINA_SERVER_HOST}/group/${groupId}/quit`, method: 'POST', header: {
                 Authorization: 'Bearer ' + jwt
             }, data: JSON.stringify(buildQuitGroupRequestBody(soterResult)), success(res) {
                 if (res.statusCode === 200) resolve(res.data); else {

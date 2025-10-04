@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2025 LuminaPJ
+ * SM2 Key Generator is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
 import {LUMINA_SERVER_HOST} from "../../env";
 import {isLogin} from "./LoginStoreUtil";
 import {ErrorResponse, GROUP_JOIN, TASK_CREATION, TASK_EXPAND_GROUP} from "../CommonUtil";
@@ -46,7 +57,7 @@ export interface ApprovalInfo {
 async function getApprovalListPromise(jwt: string): Promise<ApprovalInfo[]> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/approval/admin', header: {
+            url: `https://${LUMINA_SERVER_HOST}/approval/admin`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 resolve(res.data as ApprovalInfo[]);
@@ -58,7 +69,7 @@ async function getApprovalListPromise(jwt: string): Promise<ApprovalInfo[]> {
 async function getSelfApprovalListPromise(jwt: string): Promise<ApprovalInfo[]> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/approval/self', header: {
+            url: `https://${LUMINA_SERVER_HOST}/approval/self`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 resolve(res.data as ApprovalInfo[]);
@@ -83,7 +94,7 @@ export interface JoinGroupApprovalInfo {
 export async function getApprovalInfoPromise(jwt: string, approvalId: string): Promise<JoinGroupApprovalInfo | null> {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/approval/' + approvalId, header: {
+            url: `https://${LUMINA_SERVER_HOST}/approval/${approvalId}`, header: {
                 Authorization: 'Bearer ' + jwt
             }, success: (res) => {
                 if (res.statusCode === 200) {

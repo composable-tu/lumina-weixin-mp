@@ -1,4 +1,14 @@
-// pages/index/selected-task/vote/vote.ts
+/**
+ * Copyright (c) 2025 LuminaPJ
+ * SM2 Key Generator is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
 import Message from 'tdesign-miniprogram/message/index';
 import {store, StoreInstance} from "../../../../utils/MobX";
 import {EMPTY_JWT, getIsUserSoterEnabled, isLogin, loginStoreUtil} from "../../../../utils/store-utils/LoginStoreUtil";
@@ -219,7 +229,7 @@ async function startVotePromise(jwt: string, taskId: string, voteOptions: string
     } : {}
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/task/vote/' + taskId, header: {
+            url: `https://${LUMINA_SERVER_HOST}/task/vote/${taskId}`, header: {
                 'Authorization': 'Bearer ' + jwt
             }, method: 'POST', data: JSON.stringify({
                 voteOptions: voteOptions, ...(soterResult && {soterInfo: {...soterInfo}})
@@ -239,7 +249,7 @@ async function startRecallVotePromise(jwt: string, taskId: string, soterResult: 
     } : {}
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/task/vote/' + taskId + '/recall', header: {
+            url: `https://${LUMINA_SERVER_HOST}/task/vote/${taskId}/recall`, header: {
                 'Authorization': 'Bearer ' + jwt
             }, method: 'POST', data: JSON.stringify({
                 ...(soterResult && {soterInfo: {...soterInfo}})

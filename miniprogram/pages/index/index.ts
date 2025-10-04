@@ -1,11 +1,20 @@
-// index.ts
-
+/**
+ * Copyright (c) 2025 LuminaPJ
+ * SM2 Key Generator is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
 import ActionSheet, {ActionSheetTheme} from 'tdesign-miniprogram/action-sheet/index';
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {store, StoreInstance} from "../../utils/MobX";
 import {EMPTY_JWT, loginStoreUtil} from "../../utils/store-utils/LoginStoreUtil"
 import {getErrorMessage} from "../../utils/CommonUtil";
-import {CHECK_IN, taskStoreUtil} from "../../utils/store-utils/TaskStoreUtil";
+import {CHECK_IN, taskStoreUtil, VOTE} from "../../utils/store-utils/TaskStoreUtil";
 
 const util = require('../../utils/CommonUtil');
 
@@ -113,7 +122,7 @@ Page<IData, StoreInstance>({
                     url: '/pages/index/selected-task/check-in/check-in?selectedTaskId=' + selectedTaskId
                 });
                 break;
-            case 'VOTE':
+            case VOTE:
                 wx.navigateTo({
                     url: '/pages/index/selected-task/vote/vote?selectedTaskId=' + selectedTaskId
                 });

@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2025 LuminaPJ
+ * SM2 Key Generator is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
 import {LUMINA_SERVER_HOST} from "../env";
 import {ErrorResponse} from "./CommonUtil";
 import {UserInfo} from "./store-utils/UserInfoUtil";
@@ -12,7 +23,7 @@ import {UserInfo} from "./store-utils/UserInfoUtil";
 export async function renameGroupPromise(jwt: string, groupId: string, newGroupName: string, soterResult: WechatMiniprogram.StartSoterAuthenticationSuccessCallbackResult | null) {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/groupManager/' + groupId + '/rename', method: 'POST', header: {
+            url: `https://${LUMINA_SERVER_HOST}/groupManager/${groupId}/rename`, method: 'POST', header: {
                 Authorization: 'Bearer ' + jwt
             }, data: JSON.stringify(buildRenameGroupRequestBody(newGroupName, soterResult)), success(res) {
                 if (res.statusCode === 200) resolve(res.data); else {
@@ -44,7 +55,7 @@ function buildRenameGroupRequestBody(newGroupName: string, soterResult: WechatMi
 export async function setGroupPreAuthTokenPromise(jwt: string, groupId: string, preAuthToken: string, validity: number, soterResult: WechatMiniprogram.StartSoterAuthenticationSuccessCallbackResult | null) {
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/groupManager/' + groupId + '/setPreAuthToken',
+            url: `https://${LUMINA_SERVER_HOST}/groupManager/${groupId}/setPreAuthToken`,
             method: 'POST',
             header: {
                 Authorization: 'Bearer ' + jwt
@@ -85,7 +96,7 @@ export const RESET_TO_MEMBER = 'resetToMember';
 export async function groupUserActionPromise(action: string, jwt: string, groupId: string, userInfo: UserInfo[], soterResult: WechatMiniprogram.StartSoterAuthenticationSuccessCallbackResult | null) {
     return new Promise((resolve, reject) => {
         if (action !== REMOVE_MEMBER && action !== SET_ADMIN && action !== RESET_TO_MEMBER) reject(new Error('无效的操作')); else if (userInfo.length === 0) reject(new Error('提交的用户不能为空')); else wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/groupManager/' + groupId + '/' + action, method: 'POST', header: {
+            url: `https://${LUMINA_SERVER_HOST}/groupManager/${groupId}/${action}`, method: 'POST', header: {
                 Authorization: 'Bearer ' + jwt
             }, data: JSON.stringify(buildGroupUserActionInfo(userInfo, soterResult)), success(res) {
                 if (res.statusCode === 200) resolve(res.data); else {

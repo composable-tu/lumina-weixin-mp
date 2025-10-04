@@ -1,13 +1,29 @@
-// pages/subpages/task-management/vote/vote.ts
+/**
+ * Copyright (c) 2025 LuminaPJ
+ * SM2 Key Generator is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
+import ActionSheet, {ActionSheetTheme} from 'tdesign-miniprogram/action-sheet/index';
 import Message from 'tdesign-miniprogram/message/index';
-import {getVoteTaskManagerInfoPromise, VoteTaskInfoManagerInfo} from "../../../../utils/task-manager/VoteTaskManager";
+import Toast, {hideToast} from 'tdesign-miniprogram/toast/index';
+import {
+    downloadVoteTaskInfoExcelPromise,
+    getVoteTaskManagerInfoPromise,
+    VoteTaskInfoManagerInfo
+} from "../../../../utils/task-manager/VoteTaskManager";
 import {store, StoreInstance} from "../../../../utils/MobX";
 import {GroupInfo, groupStoreUtil} from "../../../../utils/store-utils/GroupStoreUtil";
 import {EMPTY_JWT, getIsUserSoterEnabled, isLogin, loginStoreUtil} from "../../../../utils/store-utils/LoginStoreUtil";
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {userInfoStoreUtil} from "../../../../utils/store-utils/UserInfoUtil";
-import {taskStoreUtil} from "../../../../utils/store-utils/TaskStoreUtil";
-import {getErrorMessage, isNullOrEmptyOrUndefined} from "../../../../utils/CommonUtil";
+import {taskManagerFabGrid, taskStoreUtil} from "../../../../utils/store-utils/TaskStoreUtil";
+import {getErrorMessage, isNullOrEmptyOrUndefined, weixinOpenDocumentPromise} from "../../../../utils/CommonUtil";
 
 const util = require('../../../../utils/CommonUtil');
 
@@ -125,21 +141,49 @@ Page<IData, StoreInstance>({
                 clickedOptionDescription: clickedOption?.optionDescription ?? null
             })
         }
+    }, handleFabClick() {
+        ActionSheet.show({
+            theme: ActionSheetTheme.Grid, selector: '#t-action-sheet', context: this, items: taskManagerFabGrid,
+        });
+    }, handleFabSelected(e: WechatMiniprogram.CustomEvent) {
+        switch (e.detail.selected.label) {
+            case '导出为 Excel':
+                this.downloadAndOpenExcel()
+                break;
+            default:
+                break;
+        }
+    }, async downloadAndOpenExcel() {
+        Toast({
+            context: this, selector: '#t-toast', message: '导出中', duration: -1, theme: 'loading', direction: 'column',
+        });
+        try {
+            const excelFileUrl = await downloadVoteTaskInfoExcelPromise(this.getJWT(), this.data.selectedTaskId)
+            await weixinOpenDocumentPromise({filePath: excelFileUrl, showMenu: true, fileType: 'xlsx'})
+        } catch (e) {
+            this.setData({
+                errorMessage: getErrorMessage(e), errorVisible: true
+            });
+        } finally {
+            hideToast({
+                context: this, selector: '#t-toast',
+            });
+        }
     }
 })
 
 async function getSelectedVoteTaskManagerInfo(that: WechatMiniprogram.Page.Instance<IData, StoreInstance>, selectedTaskId: string) {
-    const selectCheckInTaskManagerInfo = await getVoteTaskManagerInfoPromise(that.getJWT(), selectedTaskId)
-    if (selectCheckInTaskManagerInfo == null) that.setData({
+    const selectVoteTaskManagerInfo = await getVoteTaskManagerInfoPromise(that.getJWT(), selectedTaskId)
+    if (selectVoteTaskManagerInfo == null) that.setData({
         errorMessage: "未找到任务", errorVisible: true
     }); else {
-        const targetGroupInfo: GroupInfo | undefined = that.getGroupInfo().find((groupInfo: GroupInfo) => groupInfo.groupId === selectCheckInTaskManagerInfo.groupId)
-        const participantCount = selectCheckInTaskManagerInfo.voteTaskOptions.reduce((total, option) => total + (option.voteParticipants?.length || 0), 0)
+        const targetGroupInfo: GroupInfo | undefined = that.getGroupInfo().find((groupInfo: GroupInfo) => groupInfo.groupId === selectVoteTaskManagerInfo.groupId)
+        const participantCount = selectVoteTaskManagerInfo.voteTaskOptions.reduce((total, option) => total + (option.voteParticipants?.length || 0), 0)
         if (targetGroupInfo) that.setData({
             selectedTaskId: selectedTaskId,
             isGroupAdmin: that.getGroupInfo().length !== 0 ? util.isAdminAndSuperAdmin(targetGroupInfo.permission) : false,
-            isTaskCreator: that.getUserInfo().userId === selectCheckInTaskManagerInfo.creatorId,
-            selectedTask: selectCheckInTaskManagerInfo,
+            isTaskCreator: that.getUserInfo().userId === selectVoteTaskManagerInfo.creatorId,
+            selectedTask: selectVoteTaskManagerInfo,
             participantCount: participantCount
         })
     }

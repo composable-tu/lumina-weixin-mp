@@ -1,4 +1,14 @@
-// pages/subpages/join-group/join-group.ts
+/**
+ * Copyright (c) 2025 LuminaPJ
+ * SM2 Key Generator is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {store, StoreInstance} from "../../../utils/MobX";
 import {EMPTY_JWT, isLogin, loginStoreUtil} from "../../../utils/store-utils/LoginStoreUtil";
@@ -146,7 +156,7 @@ async function joinNewGroupPromise(jwt: string, groupId: string, userId: string,
     const requestJsonString = buildJoinNewGroupRequestBodyJson(userId, userName, device, groupPreAuthToken, requesterComment)
     return new Promise((resolve, reject) => {
         wx.request({
-            url: 'https://' + LUMINA_SERVER_HOST + '/group/' + groupId + '/join', method: 'POST', header: {
+            url: `https://${LUMINA_SERVER_HOST}/group/${groupId}/join`, method: 'POST', header: {
                 Authorization: 'Bearer ' + jwt
             }, data: JSON.stringify(requestJsonString), success: (res) => {
                 if (res.statusCode === 200) resolve(res.data); else {
