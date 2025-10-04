@@ -17,7 +17,7 @@ import {userInfoStoreUtil} from "../../../../utils/store-utils/UserInfoUtil";
 import Message from 'tdesign-miniprogram/message/index';
 import Toast, {hideToast} from 'tdesign-miniprogram/toast/index';
 import {GroupInfo, groupStoreUtil} from "../../../../utils/store-utils/GroupStoreUtil";
-import {getErrorMessage, isNullOrEmptyOrUndefined} from "../../../../utils/CommonUtil";
+import {getErrorMessage, isNullOrEmptyOrUndefined, weixinOpenDocumentPromise} from "../../../../utils/CommonUtil";
 import {
     EXPIRED,
     MARK_AS_NOT_PARTICIPANT,
@@ -280,11 +280,7 @@ Page<IData, StoreInstance>({
         });
         try {
             const excelFileUrl = await downloadCheckInTaskInfoExcelPromise(this.getJWT(), this.data.selectedTaskId)
-            wx.openDocument({
-                filePath: excelFileUrl, showMenu: true, fileType: 'xlsx', fail(err) {
-                    throw err
-                }
-            })
+            await weixinOpenDocumentPromise({filePath: excelFileUrl, showMenu: true, fileType: 'xlsx'})
         } catch (e) {
             this.setData({
                 errorMessage: getErrorMessage(e), errorVisible: true

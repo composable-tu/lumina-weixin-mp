@@ -23,7 +23,7 @@ import {EMPTY_JWT, getIsUserSoterEnabled, isLogin, loginStoreUtil} from "../../.
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {userInfoStoreUtil} from "../../../../utils/store-utils/UserInfoUtil";
 import {taskManagerFabGrid, taskStoreUtil} from "../../../../utils/store-utils/TaskStoreUtil";
-import {getErrorMessage, isNullOrEmptyOrUndefined} from "../../../../utils/CommonUtil";
+import {getErrorMessage, isNullOrEmptyOrUndefined, weixinOpenDocumentPromise} from "../../../../utils/CommonUtil";
 
 const util = require('../../../../utils/CommonUtil');
 
@@ -159,11 +159,7 @@ Page<IData, StoreInstance>({
         });
         try {
             const excelFileUrl = await downloadVoteTaskInfoExcelPromise(this.getJWT(), this.data.selectedTaskId)
-            wx.openDocument({
-                filePath: excelFileUrl, showMenu: true, fileType: 'xlsx', fail(err) {
-                    throw err
-                }
-            })
+            await weixinOpenDocumentPromise({filePath: excelFileUrl, showMenu: true, fileType: 'xlsx'})
         } catch (e) {
             this.setData({
                 errorMessage: getErrorMessage(e), errorVisible: true

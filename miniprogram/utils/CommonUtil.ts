@@ -28,14 +28,10 @@ const formatNumber = (n: number) => {
 }
 
 // rpx to px
-export const rpx2px = (rpx: number): number => {
-    return Math.round(rpx / 750 * wx.getWindowInfo().windowWidth)
-}
+export const rpx2px = (rpx: number): number => Math.round(rpx / 750 * wx.getWindowInfo().windowWidth)
 
 // px to rpx
-export const px2rpx = (px: number): number => {
-    return Math.round(px / wx.getWindowInfo().windowWidth * 750)
-}
+export const px2rpx = (px: number): number => Math.round(px / wx.getWindowInfo().windowWidth * 750)
 
 export const getHeightPx = (): number => {
     const windowInfo = wx.getWindowInfo()
@@ -102,9 +98,7 @@ export function copyUtil(copyData: string, Message: any, that: WechatMiniprogram
     })
 }
 
-export const isNullOrEmptyOrUndefined = (value: any): boolean => {
-    return value === null || value === undefined || value === ''
-}
+export const isNullOrEmptyOrUndefined = (value: any): boolean => value === null || value === undefined || value === ''
 
 export const isNullOrUndefined = (value: any): boolean => {
     return value === null || value === undefined
@@ -120,20 +114,23 @@ export const getErrorMessage = (e: any): string => {
     if (e.message) return e.message; else if (e.errMsg) return e.errMsg; else return e.toString()
 }
 
-export function isAdminAndSuperAdmin(permission: string) {
-    return permission === 'ADMIN' || permission === 'SUPER_ADMIN'
-}
+export const isAdminAndSuperAdmin = (permission: string) => permission === 'ADMIN' || permission === 'SUPER_ADMIN';
 
-export function isSuperAdmin(permission: string) {
-    return permission === 'SUPER_ADMIN'
-}
+export const isSuperAdmin = (permission: string) => permission === 'SUPER_ADMIN';
 
-export function isAdmin(permission: string) {
-    return permission === 'ADMIN'
-}
+export const isAdmin = (permission: string) => permission === 'ADMIN';
 
 export const GROUP_JOIN = 'GROUP_JOIN'
 export const TASK_EXPAND_GROUP = 'TASK_EXPAND_GROUP'
 export const TASK_CREATION = 'TASK_CREATION'
 
+/**
+ * 微信小程序内打开文档
+ * @param options 参数
+ */
+export function weixinOpenDocumentPromise(options: WechatMiniprogram.OpenDocumentOption): Promise<void> {
+    return new Promise((resolve, reject) => {
+        wx.openDocument({...options, success: () => resolve(), fail: reject});
+    });
+}
 
