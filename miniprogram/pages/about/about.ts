@@ -11,7 +11,7 @@
  */
 import {copyUtil, getErrorMessage} from "../../utils/CommonUtil";
 import {ICP_ID, MINI_PROGRAM_NAME, ORGANIZATION_NAME} from '../../env';
-import Message from 'tdesign-miniprogram/message/index';
+import {Message} from 'tdesign-miniprogram';
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {store, StoreInstance} from "../../utils/MobX";
 import {isLogin, loginStoreUtil} from "../../utils/store-utils/LoginStoreUtil";

@@ -21,7 +21,7 @@ import {
     isJoinGroupApprovalInfo,
     JoinGroupApprovalInfo
 } from "../../../utils/store-utils/ApprovalStoreUtil";
-import Message from 'tdesign-miniprogram/message/index';
+import {Message} from 'tdesign-miniprogram';
 import {luminaStartSoter} from "../../../utils/security/SoterUtil";
 import {LUMINA_SERVER_HOST} from "../../../env";
 import {EncryptContent, sm4EncryptContent} from "../../../utils/security/WeixinUserCrypto";

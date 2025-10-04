@@ -20,7 +20,7 @@ import {
     groupStoreUtil,
     quitGroupPromise
 } from "../../../../utils/store-utils/GroupStoreUtil";
-import Message from 'tdesign-miniprogram/message/index';
+import {Message} from 'tdesign-miniprogram';
 import {
     formatTime,
     getErrorMessage,

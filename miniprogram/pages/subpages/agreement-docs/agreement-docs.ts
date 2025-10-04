@@ -33,6 +33,7 @@ const util = require("../../../utils/CommonUtil");
 interface IData {
 }
 
+// @ts-ignore
 Page<IData, StoreInstance>({
     onLoad(options) {
         this.storeBindings = createStoreBindings(this, {

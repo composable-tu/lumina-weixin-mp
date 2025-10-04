@@ -59,7 +59,7 @@ export const getSafeAreaBottomPx = (): number => {
  *
  * ```TypeScript
  * // TypeScript
- * import Message from 'tdesign-miniprogram/message/index';
+ * import {Message} from 'tdesign-miniprogram';
  * ```
  *
  * ```json5

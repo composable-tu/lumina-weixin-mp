@@ -9,7 +9,8 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-import ActionSheet, {ActionSheetTheme} from 'tdesign-miniprogram/action-sheet/index';
+import {ActionSheet} from 'tdesign-miniprogram';
+import {ActionSheetTheme} from 'tdesign-miniprogram/action-sheet/index';
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {store, StoreInstance} from "../../utils/MobX";
 import {EMPTY_JWT, loginStoreUtil} from "../../utils/store-utils/LoginStoreUtil"
@@ -68,7 +69,7 @@ Page<IData, StoreInstance>({
         this.setData({
             scrollHeightPx: scrollHeightPx - util.rpx2px(80), safeAreaBottomPx: util.getSafeAreaBottomPx()
         })
-    }, async onShow(){
+    }, async onShow() {
         await this.onRefresh()
     }, errorVisibleChange(e: WechatMiniprogram.CustomEvent) {
         this.setData({

@@ -9,13 +9,13 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-import ActionSheet, {ActionSheetTheme} from 'tdesign-miniprogram/action-sheet/index';
+import {ActionSheet, Message, Toast} from 'tdesign-miniprogram';
+import {ActionSheetTheme} from 'tdesign-miniprogram/action-sheet/index';
 import {store, StoreInstance} from "../../../../utils/MobX";
 import {EMPTY_JWT, getIsUserSoterEnabled, isLogin, loginStoreUtil} from "../../../../utils/store-utils/LoginStoreUtil";
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {userInfoStoreUtil} from "../../../../utils/store-utils/UserInfoUtil";
-import Message from 'tdesign-miniprogram/message/index';
-import Toast, {hideToast} from 'tdesign-miniprogram/toast/index';
+import {hideToast} from 'tdesign-miniprogram/toast/index';
 import {GroupInfo, groupStoreUtil} from "../../../../utils/store-utils/GroupStoreUtil";
 import {getErrorMessage, isNullOrEmptyOrUndefined, weixinOpenDocumentPromise} from "../../../../utils/CommonUtil";
 import {

@@ -20,7 +20,7 @@ import {
     GroupInfoMember,
     groupStoreUtil
 } from "../../../utils/store-utils/GroupStoreUtil";
-import Message from 'tdesign-miniprogram/message/index';
+import {Message} from 'tdesign-miniprogram';
 import {
     ErrorResponse,
     getErrorMessage,

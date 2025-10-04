@@ -20,7 +20,10 @@
     "types": ["miniprogram-api-typings"]
   },
   "include": [
-    "./**/*.ts"
+    "./**/*.ts",
+    "miniprogram/utils/OSSLicensesDistText.js",
+    "miniprogram/utils/OSSLicensesDist.js",
+    "miniprogram/agreement-docs/AgreementDocsDist.js"
   ],
   "exclude": [
     "node_modules"

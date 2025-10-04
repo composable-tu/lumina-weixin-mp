@@ -11,7 +11,7 @@
  */
 import {createStoreBindings} from "mobx-miniprogram-bindings";
 import {store, StoreInstance} from "../../../utils/MobX";
-import Message from 'tdesign-miniprogram/message/index';
+import {Message} from 'tdesign-miniprogram';
 import {
     EMPTY_JWT,
     getIsUserSoterEnabled,

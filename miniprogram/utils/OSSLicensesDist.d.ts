@@ -1,0 +1,212 @@
+declare const _default: {
+    "@types/jsuri@1.3.35": {
+        licenses: string;
+        repository: string;
+        name: string;
+        publisher: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "@unocss/cli@66.5.2": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        email: string;
+        name: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "dayjs@1.11.18": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        name: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "json5@2.2.3": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        email: string;
+        name: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "jsuri@1.3.1": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        email: string;
+        name: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "license-checker-rseidelsohn@4.4.2": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        email: string;
+        name: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "lumina-weixin-mp@0.0.3": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        name: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "marked@16.3.0": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        name: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "miniprogram-api-typings@4.1.0": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        email: string;
+        name: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "miniprogram-sm-crypto@0.3.13": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        name: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "mobx-miniprogram-bindings@5.1.1": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        name: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "mobx-miniprogram@6.12.3": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        name: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "semver@7.7.2": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        name: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "shelljs@0.10.0": {
+        licenses: string;
+        repository: string;
+        name: string;
+        publisher: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "spdx-license-list@6.10.0": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        email: string;
+        name: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "tdesign-miniprogram@1.11.0-beta.2": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        name: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "typescript@5.9.3": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        name: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "uglify-js@3.19.3": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        email: string;
+        name: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "unocss@66.5.2": {
+        licenses: string;
+        repository: string;
+        publisher: string;
+        email: string;
+        name: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+};
+export default _default;

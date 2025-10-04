@@ -15,7 +15,7 @@ import {store, StoreInstance} from "../../../../utils/MobX";
 import {userInfoStoreUtil} from "../../../../utils/store-utils/UserInfoUtil";
 import {GroupInfo, groupStoreUtil} from "../../../../utils/store-utils/GroupStoreUtil";
 import {ErrorResponse, getErrorMessage, isNullOrEmptyOrUndefined} from "../../../../utils/CommonUtil";
-import Message from 'tdesign-miniprogram/message/index';
+import {Message} from 'tdesign-miniprogram';
 import {CheckInTaskInfo, getCheckInTaskInfoPromise, taskStoreUtil} from "../../../../utils/store-utils/TaskStoreUtil";
 import {LUMINA_SERVER_HOST} from "../../../../env";
 

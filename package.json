@@ -27,6 +27,7 @@
     "miniprogram-api-typings": "^4.1.0",
     "shelljs": "^0.10.0",
     "spdx-license-list": "^6.10.0",
+    "typescript": "^5.9.3",
     "uglify-js": "^3.19.3",
     "unocss": "^66.5.2"
   },

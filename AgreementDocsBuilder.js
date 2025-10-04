@@ -18,6 +18,7 @@
  * 3. 将所有文档内容打包成一个JavaScript对象模块
  * 4. 使用 uglify-js 对生成的模块进行压缩混淆
  * 5. 输出为 AgreementDocsDist.js 文件供小程序使用
+ * 6. 生成 AgreementDocsDist.d.ts 声明文件
  */
 
 const fs = require('fs');
@@ -25,6 +26,7 @@ const path = require('path');
 const marked = require('marked');
 const uglifyJS = require('uglify-js');
 const JSON5 = require('json5');
+const shell = require('shelljs');
 
 marked.setOptions({
     gfm: true, breaks: true,
@@ -69,9 +71,12 @@ const minifiedResult = uglifyJS.minify(jsContent, {
 });
 
 if (minifiedResult.error) {
-    console.error('压缩过程中出现错误:', minifiedResult.error);
+    console.error('压缩过程中出现错误：', minifiedResult.error);
     process.exit(1);
 }
 
 const outputFilePath = path.join(targetDir, 'AgreementDocsDist.js');
 fs.writeFileSync(outputFilePath, minifiedResult.code, 'utf-8');
+
+const tscCommand = `npx tsc --declaration --emitDeclarationOnly --allowJs ${outputFilePath} --outDir ${targetDir}`;
+shell.exec(tscCommand);

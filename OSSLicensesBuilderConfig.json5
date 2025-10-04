@@ -1,5 +1,6 @@
 /**
  * 如需生成多个 npm 依赖目录的开放源代码许可信息，请在此列表下方添加更多对象
+ * `isTypeScript`: 是否为生成的 JS 文件添加 TypeScript 定义
  * `outputFile`: 生成的文件名，无需添加 `.js` 后缀
  * `customFormat`: 自定义 license-checker-rseidelsohn 生成格式的 JSON 文件路径
  * `customPath`: 生成产物目标目录
@@ -7,6 +8,7 @@
  **/
 [
   {
+    isTypeScript: true,
     outputFile: "OSSLicensesDist",
     customFormat: "OSSLicensesBuildFormat.json",
     customPath: "/miniprogram/utils/"

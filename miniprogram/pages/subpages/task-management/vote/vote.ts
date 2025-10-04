@@ -9,9 +9,9 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-import ActionSheet, {ActionSheetTheme} from 'tdesign-miniprogram/action-sheet/index';
-import Message from 'tdesign-miniprogram/message/index';
-import Toast, {hideToast} from 'tdesign-miniprogram/toast/index';
+import {ActionSheetTheme} from 'tdesign-miniprogram/action-sheet/index';
+import {ActionSheet, Message, Toast} from 'tdesign-miniprogram';
+import {hideToast} from 'tdesign-miniprogram/toast/index';
 import {
     downloadVoteTaskInfoExcelPromise,
     getVoteTaskManagerInfoPromise,
