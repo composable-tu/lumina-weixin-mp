@@ -35,6 +35,8 @@ const crypto = require('crypto');
 const uglifyJS = require('uglify-js');
 const JSON5 = require('json5');
 const spdx = require('spdx-license-list');
+const { createMinifier } = require("dts-minify");
+const ts = require("typescript");
 
 function runCommand(command, args) {
     try {
@@ -153,6 +155,16 @@ function calculateSHA256(text) {
 function emitDeclarations(files, outDir) {
     const base = 'npx tsc --declaration --emitDeclarationOnly --allowJs';
     shell.exec(`${base} ${files.join(' ')} --outDir ${outDir}`);
+
+    files.forEach(file => {
+        const minifier = createMinifier(ts);
+        const dtsFilePath = path.join(file.replace(/\.js$/, '.d.ts'));
+        if (fs.existsSync(dtsFilePath)) {
+            const dtsContent = fs.readFileSync(dtsFilePath, 'utf8');
+            const minifiedDts = minifier.minify(dtsContent);
+            fs.writeFileSync(dtsFilePath, minifiedDts, { encoding: 'utf8', flag: 'w', mode: 0o644 });
+        }
+    });
 }
 
 main();

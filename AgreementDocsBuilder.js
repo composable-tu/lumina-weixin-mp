@@ -27,6 +27,8 @@ const marked = require('marked');
 const uglifyJS = require('uglify-js');
 const JSON5 = require('json5');
 const shell = require('shelljs');
+const {createMinifier} = require("dts-minify");
+const ts = require("typescript");
 
 marked.setOptions({
     gfm: true, breaks: true,
@@ -80,3 +82,11 @@ fs.writeFileSync(outputFilePath, minifiedResult.code, 'utf-8');
 
 const tscCommand = `npx tsc --declaration --emitDeclarationOnly --allowJs ${outputFilePath} --outDir ${targetDir}`;
 shell.exec(tscCommand);
+
+const minifier = createMinifier(ts);
+const dtsFilePath = path.join(outputFilePath.replace(/\.js$/, '.d.ts'));
+if (fs.existsSync(dtsFilePath)) {
+    const dtsContent = fs.readFileSync(dtsFilePath, 'utf8');
+    const minifiedDts = minifier.minify(dtsContent);
+    fs.writeFileSync(dtsFilePath, minifiedDts, {encoding: 'utf8', flag: 'w', mode: 0o644});
+}
