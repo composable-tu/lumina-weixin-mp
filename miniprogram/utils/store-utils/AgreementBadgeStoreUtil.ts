@@ -17,8 +17,7 @@ import {
     USER_AGREEMENT_VERSION
 } from "../../env";
 import {getWeixinStorageWithDefault} from "../WeixinStorageUtil";
-
-const semver = require('semver')
+import {gt} from 'semver';
 
 const DOCS = [{
     key: 'UserAgreement',
@@ -62,7 +61,7 @@ async function getAgreementBadgeStatus(that: WechatMiniprogram.Page.TrivialInsta
     DOCS.forEach((d, idx) => {
         const nowV = d.version()
         const storedV = stored[idx]
-        const show = storedV === EMPTY || semver.gt(nowV, storedV)
+        const show = storedV === EMPTY || gt(nowV, storedV)
         that[d.badgeSetter](show)
     })
 }

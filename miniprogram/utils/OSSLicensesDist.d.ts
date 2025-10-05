@@ -10,6 +10,39 @@ declare const _default: {
         licenseTextHash: string;
         licenseName: string;
     };
+    "@types/semver@7.7.1": {
+        licenses: string;
+        repository: string;
+        name: string;
+        publisher: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "@types/shelljs@0.8.17": {
+        licenses: string;
+        repository: string;
+        name: string;
+        publisher: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
+    "@types/uglify-js@3.17.5": {
+        licenses: string;
+        repository: string;
+        name: string;
+        publisher: string;
+        email: string;
+        version: string;
+        description: string;
+        licenseTextHash: string;
+        licenseName: string;
+    };
     "@unocss/cli@66.5.2": {
         licenses: string;
         repository: string;
