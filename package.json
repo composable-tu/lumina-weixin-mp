@@ -27,7 +27,7 @@
     "@unocss/cli": "^66.5.2",
     "dts-minify": "^0.3.3",
     "license-checker-rseidelsohn": "^4.4.2",
-    "marked": "^16.3.0",
+    "marked": "^17.0.0",
     "miniprogram-api-typings": "^4.1.0",
     "shelljs": "^0.10.0",
     "spdx-license-list": "^6.10.0",
